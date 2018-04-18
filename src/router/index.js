@@ -28,75 +28,253 @@ export const constantRouterMap = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
-    name: 'Dashboard',
-    hidden: true,
-    children: [{
-      path: 'dashboard',
-      component: () => import('@/views/dashboard/index')
-    }]
+    redirect: '/dashboard'
   },
 
-  // {
-  //   path: '/example',
-  //   component: Layout,
-  //   redirect: '/example/table',
-  //   name: 'Example',
-  //   meta: { title: 'Example', icon: 'example' },
-  //   children: [
-  //     {
-  //       path: 'table',
-  //       name: 'Table',
-  //       component: () => import('@/views/table/index'),
-  //       meta: { title: 'Table', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'tree',
-  //       name: 'Tree',
-  //       component: () => import('@/views/tree/index'),
-  //       meta: { title: 'Tree', icon: 'tree' }
-  //     }
-  //   ]
-  // },
-
-  // {
-  //   path: '/form',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'Form',
-  //       component: () => import('@/views/form/index'),
-  //       meta: { title: 'Form', icon: 'form' }
-  //     }
-  //   ]
-  // },
-
   {
-    path: '/houses',
+    path: '/dashboard',
     component: Layout,
-    redirect: '/houses/index',
-    name: 'Houses',
-    meta: { title: 'Houses', icon: 'example' },
+    redirect: '/dashboard/index',
+    children: [{
+        path: 'index',
+        name: 'Dashboard',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '首页', icon: 'home' }
+    }]
+  },
+  {
+    path: '/partymember',
+    component: Layout,
+    redirect: '/partymember/index',
+    name: '党员',
+    meta: { title: '党员', icon: 'partymember' },
     children: [
       {
         path: 'index',
-        name: 'HousesTable',
+        name: '党员管理',
         component: () => import('@/views/houses/index'),
-        meta: { title: 'table', icon: 'table' }
+        meta: { title: '党员管理', icon: 'partymember' }
+      },
+      // {
+      //   path: 'create',
+      //   name: '添加',
+      //   hidden: true,
+      //   component: () => import('@/views/houses/createHouse'),
+      // },
+      {
+        path: 'detail/:id',
+        name: '详情',
+        hidden: true,
+        component: () => import('@/views/houses/detailHouse')
+      },
+      // {
+      //   path: 'edit/:id',
+      //   name: '编辑',
+      //   hidden: true,
+      //   component: () => import('@/views/houses/detailHouse')
+      // }
+    ]
+  },
+
+  {
+    path: '/partybuilding',
+    component: Layout,
+    redirect: '/partybuilding/index',
+    name: '党建新闻',
+    meta: { title: '党建新闻', icon: 'news' },
+    children: [
+      {
+        path: 'index',
+        name: '党建新闻管理',
+        component: () => import('@/views/houses/index'),
+        meta: { title: '党建新闻管理', icon: 'news' }
       },
       {
         path: 'create',
-        name: 'createHouse',
+        name: '添加',
+        hidden: true,
         component: () => import('@/views/houses/createHouse'),
-        meta: { title: 'createHouse', icon: 'form' }
       },
       {
         path: 'detail/:id',
-        name: 'detailHouse',
+        name: '详情',
         hidden: true,
-        component: () => import('@/views/houses/detailHouse'),
-        meta: { title: 'detailHouse', icon: 'form' }
+        component: () => import('@/views/houses/detailHouse')
+      },
+      {
+        path: 'edit/:id',
+        name: '编辑',
+        hidden: true,
+        component: () => import('@/views/houses/detailHouse')
+      }
+    ]
+  },
+
+  {
+    path: '/branch',
+    component: Layout,
+    redirect: '/branch/index',
+    name: '党支部',
+    meta: { title: '党支部', icon: 'partyFlag' },
+    children: [
+      {
+        path: 'index',
+        name: '党支部管理',
+        component: () => import('@/views/houses/index'),
+        meta: { title: '党支部管理', icon: 'partyFlag' }
+      },
+      {
+        path: 'create',
+        name: '添加',
+        hidden: true,
+        component: () => import('@/views/houses/createHouse'),
+      },
+      {
+        path: 'detail/:id',
+        name: '详情',
+        hidden: true,
+        component: () => import('@/views/houses/detailHouse')
+      },
+      {
+        path: 'edit/:id',
+        name: '编辑',
+        hidden: true,
+        component: () => import('@/views/houses/detailHouse')
+      }
+    ]
+  },
+
+  {
+    path: '/study',
+    component: Layout,
+    redirect: '/study/index',
+    name: '在线学习',
+    meta: { title: '在线学习', icon: 'study' },
+    children: [
+      {
+        path: 'index',
+        name: '教学资源管理',
+        component: () => import('@/views/houses/index'),
+        meta: { title: '教学资源管理', icon: 'resources' }
+      },
+      {
+        path: 'setting',
+        name: '学习时长设置',
+        component: () => import('@/views/houses/index'),
+        meta: { title: '学习时长设置', icon: 'setting' }
+      },
+      {
+        path: 'statistics',
+        name: '统计',
+        component: () => import('@/views/houses/index'),
+        meta: { title: '统计', icon: 'statistics' }
+      },
+
+      {
+        path: 'create',
+        name: '添加',
+        hidden: true,
+        component: () => import('@/views/houses/createHouse'),
+      },
+      {
+        path: 'detail/:id',
+        name: '详情',
+        hidden: true,
+        component: () => import('@/views/houses/detailHouse')
+      },
+      {
+        path: 'edit/:id',
+        name: '编辑',
+        hidden: true,
+        component: () => import('@/views/houses/detailHouse')
+      }
+    ]
+  },
+
+  {
+    path: '/exam',
+    component: Layout,
+    redirect: '/exam/index',
+    name: '考试中心',
+    meta: { title: '考试中心', icon: 'exam' },
+    children: [
+      {
+        path: 'index',
+        name: '试题库管理',
+        component: () => import('@/views/houses/index'),
+        meta: { title: '试题库管理', icon: 'resources' }
+      },
+      {
+        path: 'setting',
+        name: '考试设置',
+        component: () => import('@/views/houses/index'),
+        meta: { title: '考试设置', icon: 'setting' }
+      },
+      {
+        path: 'statistics',
+        name: '统计',
+        component: () => import('@/views/houses/index'),
+        meta: { title: '统计', icon: 'statistics' }
+      },
+
+      {
+        path: 'create',
+        name: '添加',
+        hidden: true,
+        component: () => import('@/views/houses/createHouse'),
+      },
+      {
+        path: 'detail/:id',
+        name: '详情',
+        hidden: true,
+        component: () => import('@/views/houses/detailHouse')
+      },
+      {
+        path: 'edit/:id',
+        name: '编辑',
+        hidden: true,
+        component: () => import('@/views/houses/detailHouse')
+      }
+    ]
+  },
+
+  {
+    path: '/meeting',
+    component: Layout,
+    redirect: '/meeting/index',
+    name: '三会一课',
+    meta: { title: '三会一课', icon: 'meeting' },
+    children: [
+      {
+        path: 'index',
+        name: '三会一课管理',
+        component: () => import('@/views/houses/index'),
+        meta: { title: '三会一课管理', icon: 'meeting' }
+      },
+      {
+        path: 'statistics',
+        name: '统计',
+        component: () => import('@/views/houses/index'),
+        meta: { title: '统计', icon: 'statistics' }
+      },
+
+      {
+        path: 'create',
+        name: '添加',
+        hidden: true,
+        component: () => import('@/views/houses/createHouse'),
+      },
+      {
+        path: 'detail/:id',
+        name: '详情',
+        hidden: true,
+        component: () => import('@/views/houses/detailHouse')
+      },
+      {
+        path: 'edit/:id',
+        name: '编辑',
+        hidden: true,
+        component: () => import('@/views/houses/detailHouse')
       }
     ]
   },
