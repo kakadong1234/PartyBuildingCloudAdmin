@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <el-checkbox-group v-model="checkList" class="map_marker_type_check_box">
+    <el-checkbox-group v-model="checkList">
       <el-checkbox label="复选框 A"></el-checkbox>
       <el-checkbox label="复选框 B"></el-checkbox>
       <el-checkbox label="复选框 C"></el-checkbox>
@@ -131,41 +131,47 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .container {
-  margin:1.5rem;
+  margin:0.5rem;
   display:flex;
   display: -webkit-flex;
   justify-content:space-between;
-  .map_marker_type_check_box {
-    margin-left:1rem;
-    width: 8rem;
-    height: 10rem; 
+  background-color: #F5F5F5;
+  .el-checkbox-group {
+    width: 2.5rem;
+    height: 4rem; 
     display:flex;
     display: -webkit-flex;
     flex-direction: column;
-    justify-content:space-between;
+    justify-content:flex-start;
+    .el-checkbox {
+      margin-left:0.2rem;
+      margin-top:0.25rem;
+    }
   }
   .map{
-    width: 50rem;
-    height: 30rem; 
+    width: 10rem;
+    height: 7rem; 
   }  
   .notice_container{
-     margin-left:1rem;
-     width: 9rem;
-     height: 18rem; 
+     margin-left:0.2rem;
+     margin-top:0.25rem;
+     width: 2.5rem;
+     height: 4rem; 
+     font-size: 0.2rem;
      .good_news_item{
-       margin-left:0.8rem;
+       margin-left:0.3rem;
      };
      .all_news_list_title{
-       margin-top:1rem;
+       margin-top:0.5rem;
      }
      .news_item{
-       margin-left:0.8rem;
+       margin-left:0.3em;
      };
      .exam_score_rangking_list_title{
-       margin-top:1rem;
+       margin-top:0.5rem;
      }
      .exam_score_item{
-       margin-left:0.8rem;
+       margin-left:0.3rem;
      };
   }
 }
