@@ -1,29 +1,30 @@
 <template>
-  <div class="container">
-    <el-checkbox-group v-model="checkList">
-      <el-checkbox label="复选框 A"></el-checkbox>
-      <el-checkbox label="复选框 B"></el-checkbox>
-      <el-checkbox label="复选框 C"></el-checkbox>
-      <el-checkbox label="禁用"></el-checkbox>
-      <el-checkbox label="选中且禁用"></el-checkbox>
-    </el-checkbox-group>
+  <div v-else class="container">
+    <div class="check_box_div"> 
+      <el-checkbox-group v-model="checkList">
+        <el-checkbox v-for="item in mapMarkerTypeList" :key="item.ID" :label="item.title" @change="changeTypeSelect()"></el-checkbox>
+      </el-checkbox-group>
+    </div>
     <div id="map" class="map"></div>  
     <div class="notice_container">
-
-      <div class='good_news_list_title'> 他山之玉 </div>
-      <div v-for="(item, index) in goodNewsList" :key="item.ID" class="good_news_item" @click="goToDetailPage(item.ID)">
-        {{index+1}}. {{item.title}}
-      </div>  
-
-      <div class='all_news_list_title'> 新闻动态 </div>
-      <div v-for="(item, index) in newsList" :key="item.ID" class="news_item" @click="goToDetailPage(item.ID)">
-        {{index+1}}. {{item.title}}
-      </div>  
-
-      <div class='exam_score_rangking_list_title'> {{department.name}}镇考试排行榜 </div>
-      <div v-for="(item, index) in examScoreList" :key="item.ID" class="exam_score_item">
-        {{index+1}}. {{item.examination.name}}     {{item.examination.score}} 
-      </div>  
+      <div class="right_div"> 
+        <div class='list_title_div'> 他山之玉 </div>
+        <div v-for="(item, index) in goodNewsList" :key="item.ID" class="item_div" @click="goToDetailPage(item.ID)">
+          {{index+1}}. {{item.title}}
+        </div> 
+      </div> 
+      <div class="right_div">
+        <div class='list_title_div'> 新闻动态 </div>
+        <div v-for="(item, index) in newsList" :key="item.ID" class="item_div" @click="goToDetailPage(item.ID)">
+          {{index+1}}. {{item.title}}
+        </div>  
+       </div> 
+      <div class="right_div"> 
+        <div class='list_title_div'> {{department.name}}镇考试排行榜 </div>
+        <div v-for="(item, index) in examScoreList" :key="item.ID" class="item_div">
+          {{index+1}}. {{item.examination.name}}     {{item.examination.score}} 
+        </div>  
+      </div> 
   </div>
 </div>
 </template>
@@ -35,7 +36,30 @@ import { getLocation } from '@/api/map'
 export default {
    data() {
     return {
-      checkList: ['复选框 A'],
+      isFullScreen: false,
+      checkList: ['党建示范点','党支部分布', '驻村干部分布'],
+      mapMarkerTypeList: [
+        {
+          type: 1,
+          title: '党建示范点'
+        },
+        {
+          type: 2,
+          title: '党支部分布'
+        },
+        {
+          type: 3,
+          title: '驻村干部分布'
+        },
+        {
+          type: 4,
+          title: '党建扶贫产业带'
+        },
+        {
+          type: 5,
+          title: '党员教育示范基地'
+        }
+      ],
       department: {
         name: 'aa',
         type: '镇'
@@ -130,6 +154,15 @@ export default {
 
     //考试排行榜
     fetchExamScoreList(){
+    },
+
+    goToDetailPage(ID){
+      console.log('detail')
+    },
+
+    changeTypeSelect(){
+      console.log('changeTypeSelect')
+      console.log(this.checkList)
     }
   }
 }
@@ -137,48 +170,51 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .container {
-  margin:0.5rem;
+  margin:0.2rem;
   display:flex;
   display: -webkit-flex;
   justify-content:space-between;
   background-color: #F5F5F5;
-  .el-checkbox-group {
-    width: 2.5rem;
-    height: 4rem; 
-    display:flex;
-    display: -webkit-flex;
-    flex-direction: column;
-    justify-content:flex-start;
-    .el-checkbox {
-      margin-left:0.2rem;
-      margin-top:0.25rem;
+  .check_box_div{
+    height: 8em; 
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+    .el-checkbox-group {
+      width: 2rem;
+      height: 4rem; 
+      display:flex;
+      display: -webkit-flex;
+      flex-direction: column;
+      justify-content:flex-start;
+      .el-checkbox {
+        margin-left:0.2rem;
+        margin-top:0.25rem;
+      }
     }
   }
   .map{
-    width: 10rem;
-    height: 7rem; 
+    width: 8.6rem;
+    height: 8rem; 
   }  
   .notice_container{
-     margin-left:0.2rem;
-     margin-top:0.25rem;
      width: 2.5rem;
-     height: 4rem; 
-     font-size: 0.2rem;
-     .good_news_item{
-       margin-left:0.3rem;
-     };
-     .all_news_list_title{
-       margin-top:0.5rem;
+     height: 8rem; 
+     font-size: 0.18rem;
+     color: blue;
+     .right_div{
+        margin-top:0.2rem;
+        border: 1px solid black;  
+        border-radius: 5px;
+        background-color: white;
+        .list_title_div{
+          margin-left:0.1rem;
+        }
+        .item_div{
+          margin-left:0.1rem;
+          font-size: 0.12rem;
+        }
      }
-     .news_item{
-       margin-left:0.3em;
-     };
-     .exam_score_rangking_list_title{
-       margin-top:0.5rem;
-     }
-     .exam_score_item{
-       margin-left:0.3rem;
-     };
   }
 }
 </style>
