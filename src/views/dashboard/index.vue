@@ -30,6 +30,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { getLocation } from '@/api/map'
 
 export default {
    data() {
@@ -96,14 +97,19 @@ export default {
   },
   methods: {
     initMap(){
-      const map = new AMap.Map('map',{
-        zoom: 10,
-        center: [116.39,39.9]
-      });
-      const marker = new AMap.Marker({
-        position: [116.480983, 39.989628],//marker所在的位置
-        map:map//创建时直接赋予map属性
-      });
+      const city = process.env.CITY_NAME
+      console.log(city)
+      //获取六盘水市的经纬度
+      getLocation(city).then(location => {
+        const map = new AMap.Map('map',{
+              zoom: 10,
+              center: location
+        });
+        const marker = new AMap.Marker({
+              position: location,//marker所在的位置
+              map:map//创建时直接赋予map属性
+        });
+      })
     },
 
     fetchPartyBranchList(){
