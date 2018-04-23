@@ -120,26 +120,26 @@ export const constantRouterMap = [
       {
         path: 'index',
         name: '党支部管理',
-        component: () => import('@/views/houses/index'),
+        component: () => import('@/views/partyBranch/index'),
         meta: { title: '党支部管理', icon: 'partyFlag' }
       },
       {
         path: 'create',
         name: '添加',
         hidden: true,
-        component: () => import('@/views/houses/createHouse'),
+        component: () => import('@/views/partyBranch/createPartyBranch'),
       },
       {
         path: 'detail/:id',
         name: '详情',
         hidden: true,
-        component: () => import('@/views/houses/detailHouse')
+        component: () => import('@/views/partyBranch/detailPartyBranch')
       },
       {
         path: 'edit/:id',
         name: '编辑',
         hidden: true,
-        component: () => import('@/views/houses/detailHouse')
+        component: () => import('@/views/partyBranch/detailPartyBranch')
       }
     ]
   },

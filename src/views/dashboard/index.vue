@@ -37,6 +37,7 @@ export default {
    data() {
     return {
       isFullScreen: false,
+      map: {},
       checkList: ['党建示范点','党支部分布', '驻村干部分布'],
       mapMarkerTypeList: [
         {
@@ -125,7 +126,8 @@ export default {
       console.log(city)
       //获取六盘水市的经纬度
       getLocation(city).then(location => {
-        const map = new AMap.Map('map',{
+        // 生成 map
+        map = new AMap.Map('map',{
               zoom: 10,
               center: location
         });
@@ -138,10 +140,11 @@ export default {
 
     fetchPartyBranchList(){
       //获取党支部列表
+      
     },
 
     fetchPartyMemberList(){
-      //获取党员列表
+      //获取党员签到列表
     },
 
     //他山之玉列表
