@@ -1,13 +1,13 @@
 <template>
   <div class="app-container">
     <el-form ref="form" :model="form" :rules="createRules" label-width="120px">
-      <el-form-item label="名称" prop="title">
+      <el-form-item label="党支部名称" prop="title">
         <el-input v-model="form.title"></el-input>
       </el-form-item>
-      <el-form-item label="党支部类型" prop="resourceType">
-        <el-select v-model="form.resourceType" placeholder="请选择党支部类型">
-          <el-option label="党建示范点" value="V01"></el-option>
-          <el-option label="普通党支部" value="V02"></el-option>
+      <el-form-item label="党支部类型" prop="type">
+        <el-select v-model="form.type" placeholder="请选择党支部类型">
+          <el-option label="党建示范点" value="01"></el-option>
+          <el-option label="普通党支部" value="02"></el-option>
         </el-select>  
       </el-form-item>
       <el-form-item label="地址">
@@ -23,16 +23,8 @@
       </el-form-item>
       <el-form-item label="党支部详情介绍">
         <!-- <el-input type="textarea" v-model="form.desc"></el-input> -->
-        <div id="editor" v-model="from.desc"></div>
+        <div id="editor"></div>
       </el-form-item>
-      <!-- <el-form-item label="图片墙" prop="imgUrlList">
-        <el-upload class="upload-demo" action="http://picture-system-live.ejudata.com/qiniu/image/single"
-        v-model="form.imgUrlList" list-type="picture-card" :data="dataObj" :headers="headers"
-        :before-upload="beforeUpload" :on-success="onPicUploadSuccess" :on-remove="onPicRemove"  multiple>
-          <i class="el-icon-plus"></i>
-          <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过5MB</div>
-        </el-upload>
-      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" @click="onSubmit">创建</el-button>
         <el-button @click="onCancel">取消</el-button>
@@ -42,73 +34,59 @@
 </template>
 
 <script>
-import { isValidTitle, isValidResourceType } from '@/utils/validate'
-import { createHouse } from '@/api/houses'
+import { isValidTitle,} from '@/utils/validate'
+import { createPartyBranch } from '@/api/partyBranch'
+import { getLocation } from '@/api/map'
 import WangEditor from 'wangeditor'
+// import '@/utils/custom-menu'
 
 export default {
   data() {
     const validateTitle = (rule, value, callback) => {
       console.log('-----------------123')
       if (!isValidTitle(value)) {
-        callback(new Error('请输入正确的用户名'))
+        callback(new Error('请输入正确的党支部名称'))
       } else {
         callback()
       }
     }
     const validateResourceType = (rule, value, callback) => {
       if (!isValidResourceType(value)) {
-        callback(new Error('请选择正确的资源类型'))
+        callback(new Error('请选择正确的党支部类型'))
       } else {
         callback()
       }
     }
 
-    const validateImgUrlList = (rule, value, callback) => {
-      // if (!validateURL(value)) {
-      //   callback(new Error('请输入正确的图片地址'))
-      // } else {
-      //   callback()
-      // }
-      callback()
-    }
-
     return {
+      editor:null,
       form: {
-        editor:null,
         title: '',
+        type: '',
         address: '',
-        resourceType: '',
+        location: null,
         desc: '',
-        location: '',
-        imgUrlList: []
       },
       createRules: {
         title: [{ required: true, trigger: 'blur', validator: validateTitle }],
-        resourceType: [{ required: true, trigger: 'blur', validator: validateResourceType }],
-        imgUrlList: [{ required: true, trigger: 'blur', validator: validateImgUrlList }]
-      },
-      dataObj: { bizType: 1 },
-      headers: {
-        ts: 1521450452371,
-        token: '4056a87b6101a0c16a85db1af0d0eace',
-        platform: 'WEB'
       }
     }
   },
+
   mounted() {
     console.log('mounted')
     this.initEditor()
   },
+
   methods: {
 
     initEditor(){
       console.log('initEditor')
       this.editor = new WangEditor('#editor')  //这个地方传入div元素的id 需要加#号
-        // 配置 onchange 事件
       this.editor.change = function () { // 这里是change 不是官方文档中的 onchange
         // 编辑区域内容变化时，实时打印出当前内容
         console.log(this.txt.html())
+        this.form.desc = this.txt.html()
       }
       this.editorConfigUploadImg(this.editor)
       this.editor.create()     // 生成编辑器
@@ -144,7 +122,7 @@ export default {
             }
             const file = files[0]
             const isJPGOoPNG = ['image/jpeg', 'image/png'].indexOf(file.type) !== -1
-            const isLt = file.size / 1024 / 1024 < 0.05
+            const isLt = file.size / 1024 / 1024 < 5
             if (!isJPGOoPNG) {
               alert('上传图片只能是jpg/png格式!')
               return {prevent: true,msg: '上传图片只能是jpg/png格式'}
@@ -155,17 +133,17 @@ export default {
             } 
             return {prevent:false}
       },
-      success: function (xhr, editor, result) {
-      },
-      fail: function (xhr, editor, result) {
-        console.log(xhr)
-        console.log(result)
-        // 图片上传并返回结果，但图片插入错误时触发
-        // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
-      },
-      error: function (xhr, editor) {
-        console.log('errror')
-      },
+      // success: function (xhr, editor, result) {
+      // },
+      // fail: function (xhr, editor, result) {
+      //   console.log(xhr)
+      //   console.log(result)
+      //   // 图片上传并返回结果，但图片插入错误时触发
+      //   // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
+      // },
+      // error: function (xhr, editor) {
+      //   console.log('errror')
+      // },
       timeout: function (xhr, editor) {
          alert('请求超时')
       },
@@ -179,57 +157,39 @@ export default {
       }
     }
 },
-    onPicUploadSuccess(response, file, fileList) {
-      console.log(response)
-      console.log('---------------')
-      file.url = response.data.url
-      this.form.imgUrlList.push(response.data.url)
-    },
-    onPicRemove(file, fileList) {
-      console.log(file)
-      this.form.imgUrlList = this.form.imgUrlList.filter(function(imgUrl) {
-        return imgUrl !== file.url
+    createPartyBranchData(branch) {
+      createPartyBranch(branch).then(response => {
+        console.log('create success')
+        this.$router.push({ path: '/branch/index' })
       })
     },
-    // beforeUpload(file) {
-    //   console.log(file.name)
-    //   const isJPGOoPNG = ['image/jpeg', 'image/png'].indexOf(file.type) !== -1
-    //   const isLt = file.size / 1024 / 1024 < 5
-    //   if (!isJPGOoPNG) {
-    //     this.$message.error('上传图片只能是jpg/png格式!')
-    //     return false
-    //   }
-    //   if (!isLt) {
-    //     this.$message.error('上传头像图片大小不能超过 5MB!')
-    //     return false
-    //   }
-    //   return true
-    // },
-    createHouseData(house) {
-      createHouse(house).then(response => {
-        this.$message('create success')
-        this.$router.push({ path: '/houses/index' })
-      })
-    },
+
     onSubmit() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.createHouseData(this.form)
+          this.createPartyBranchData(this.form)
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
+
     onCancel() {
-      this.$message({
-        message: 'cancel!',
-        type: 'warning'
-      })
+      // this.$message({
+      //   message: 'cancel!',
+      //   type: 'warning'
+      // })
       this.$router.push({ path: '/houses/index' })
     },
+
     getLocationByAddress(){
       console.log('getLocationByAddress')
+      const address = this.from.address;
+      console.log(address)
+      getLocation(address).then(location => {
+        this.form.location = location
+      })
     }
   }
 }
@@ -238,6 +198,10 @@ export default {
 <style scoped>
 .line{
   text-align: center;
+}
+.upload_img{
+  width: 0.2rem;
+  height: 0.2rem;
 }
 </style>
 

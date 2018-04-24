@@ -97,7 +97,7 @@ export function getPartyBranch() {
   })
 }
 
-export function createHouse(house) {
+export function createPartyBranch(branch) {
   console.log('create request')
   // return request({
   //   url: '/houses',
@@ -106,7 +106,7 @@ export function createHouse(house) {
   // })
   return new Promise(function(reslove, reject) {
     house.ID = 11
-    MOCK_HOUSES.push(house)
+    MOCK_HOUSES.push(branch)
     reslove()
   })
 }
