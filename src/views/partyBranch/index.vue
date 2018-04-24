@@ -15,16 +15,16 @@
         <el-table-column prop='title' label='名称' width='180'></el-table-column>
         <el-table-column prop='address' label='地址'></el-table-column>
         <el-table-column prop='location' label='经纬度' width='60'></el-table-column>
-        <el-table-column prop='thumbnailUrl' label='二维码图片' width='60'>
+        <el-table-column prop='qrcodeUrl' label='二维码图片' width='60'>
             <template slot-scope='scope'>
-                <img :src="scope.row.thumbnailUrl" height="40">
+                <img :src="scope.row.qrcodeUrl" height="40">
             </template>
         </el-table-column>
         <el-table-column fixed='right' label='操作' width='220'>
           <template slot-scope='scope'>
-            <el-button @click.native.prevent='detailRow(scope.$index, scope.row, scope.column, tableData)' type='primary' size='mini'>详情</el-button>
-            <el-button @click.native.prevent='editRow(scope.$index, scope.row, scope.column, tableData)' type='primary' size='mini'>编辑</el-button>
-            <el-button @click.native.prevent='deleteRow(scope.$index, scope.row, scope.column, tableData)' type='danger' size='mini'>删除</el-button>
+            <el-button @click.stop='detailRow(scope.$index, scope.row, scope.column, tableData)' type='primary' size='mini'>详情</el-button>
+            <el-button @click.stop='editRow(scope.$index, scope.row, scope.column, tableData)' type='primary' size='mini'>编辑</el-button>
+            <el-button @click.stop='deleteRow(scope.$index, scope.row, scope.column, tableData)' type='danger' size='mini'>删除</el-button>
           </template>
         </el-table-column>
     </el-table>
@@ -41,7 +41,7 @@
 </template>
 
  <script>
-import { getPartyBranch } from '@/api/partyBranch'
+import { getPartyBranchList, deletePartyBranch } from '@/api/partyBranch'
 
 export default {
   data() {
@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     fetchData() {
-      getPartyBranch().then(response => {
+      getPartyBranchList().then(response => {
         this.tableData = response.data.lists
         this.allBranchData = response.data.lists
       })
@@ -121,17 +121,11 @@ export default {
     },
     editRow(index, row, column, data) {
       console.log('edit')
-      console.log(index)
-      console.log(row)
-      console.log(column)
-      console.log(data)
+      this.$router.push({ path: '/branch/edit/' +  row.ID})
     },
     detailRow(index, row, column, data) {
       console.log('detail')
-      console.log(index)
-      console.log(row)
-      console.log(column)
-      console.log(data)
+      this.$router.push({ path: '/branch/detail/' +  row.ID})
     },
     deleteRow() {
       console.log('delete')

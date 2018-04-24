@@ -1,190 +1,194 @@
 <template>
   <div class="app-container">
     <el-form ref="form" :model="form" :rules="createRules" label-width="120px">
-      <el-form-item label="标题" prop="title">
+      <el-form-item label="党支部名称" prop="title">
         <el-input v-model="form.title"></el-input>
       </el-form-item>
-      <el-form-item label="地址">
-        <el-input v-model="form.address"></el-input>
-      </el-form-item>
-      <el-form-item label="房子类型" prop="resourceType">
-        <el-select v-model="form.resourceType" placeholder="请选择房子类型">
-          <el-option label="V01" value="V01"></el-option>
-          <el-option label="V02" value="V02"></el-option>
-          <el-option label="V03" value="V03"></el-option>
-          <el-option label="V4" value="V4"></el-option>
+      <el-form-item label="党支部类型" prop="type">
+        <el-select v-model="form.type" placeholder="请选择党支部类型">
+          <el-option label="党建示范点" value="01"></el-option>
+          <el-option label="普通党支部" value="02"></el-option>
         </el-select>  
       </el-form-item>
-      <el-form-item label="是否已经租出">
-        <el-switch v-model="form.isRentOut"></el-switch>
+      <el-form-item label="地址">
+        <el-col :span="11">
+          <el-input v-model="form.address"></el-input>
+        </el-col>
+        <el-col :span="2">
+          <el-button type="primary" @click="getLocationByAddress()">生成经纬度</el-button>
+        </el-col>
       </el-form-item>
-      <el-form-item label="开租时间">
-        <el-date-picker type="date" placeholder="请选择开租时间" v-model="form.startDate" style="width: 100%;"></el-date-picker>
+      <el-form-item label="经纬度">
+        <el-input v-model="form.location"></el-input>
       </el-form-item>
-      <el-form-item label="结租时间">
-        <el-date-picker type="date" placeholder="请选择结租时间" v-model="form.endDate" style="width: 100%;"></el-date-picker>
+      <el-form-item label="党支部详情介绍">
+        <!-- <el-input type="textarea" v-model="form.des"></el-input> -->
+        <div id="editor"></div>
       </el-form-item>
-      <!-- <el-form-item label="Activity type">
-        <el-checkbox-group v-model="form.type">
-          <el-checkbox label="Online activities" name="type"></el-checkbox>
-          <el-checkbox label="Promotion activities" name="type"></el-checkbox>
-          <el-checkbox label="Offline activities" name="type"></el-checkbox>
-          <el-checkbox label="Simple brand exposure" name="type"></el-checkbox>
-        </el-checkbox-group>
+      <el-form-item v-if="isEdit" >
+        <el-button type="primary" @click="onSubmit">编辑</el-button>
+        <el-button @click="onCancel">取消</el-button>
       </el-form-item>
-      <el-form-item label="Resources">
-        <el-radio-group v-model="form.resource">
-          <el-radio label="Sponsor"></el-radio>
-          <el-radio label="Venue"></el-radio>
-        </el-radio-group>
-      </el-form-item> -->
-      <el-form-item label="描述">
-        <el-input type="textarea" v-model="form.desc"></el-input>
-      </el-form-item>
-      <el-form-item label="图片墙" prop="imgUrlList">
-        <el-upload class="upload-demo" v-model="form.imgUrlList" list-type="picture-card" multiple
-        action="https://jsonplaceholder.typicode.com/posts/" :data="dataObj" :headers="headers" :file-list="fileList"
-        :before-upload="beforeUpload" :on-success="onPicUploadSuccess" :on-remove="onPicRemove">
-          <i class="el-icon-plus"></i>
-          <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过5MB</div>
-        </el-upload>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSave">保存</el-button>
-        <el-button @click="onDelete" type="danger">删除</el-button>
+      <el-form-item v-else >
+        <el-button @click="onCancel">返回</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
-import { isValidTitle, isValidResourceType } from '@/utils/validate'
-import { getHouse, editHouse, deleteHouse } from '@/api/houses'
+import { isValidTitle,} from '@/utils/validate'
+import { getPartyBranch, editPartyBranch } from '@/api/partyBranch'
+import { getLocation } from '@/api/map'
+import WangEditor from 'wangeditor'
+// import '@/utils/custom-menu'
 
 export default {
   data() {
     const validateTitle = (rule, value, callback) => {
       console.log('-----------------123')
       if (!isValidTitle(value)) {
-        callback(new Error('请输入正确的用户名'))
+        callback(new Error('请输入正确的党支部名称'))
       } else {
         callback()
       }
     }
     const validateResourceType = (rule, value, callback) => {
       if (!isValidResourceType(value)) {
-        callback(new Error('请选择正确的资源类型'))
+        callback(new Error('请选择正确的党支部类型'))
       } else {
         callback()
       }
     }
 
-    const validateImgUrlList = (rule, value, callback) => {
-      // if (!validateURL(value)) {
-      //   callback(new Error('请输入正确的图片地址'))
-      // } else {
-      //   callback()
-      // }
-      callback()
-    }
     return {
+      isEdit: this.$route.path.split('/')[2] === 'edit' ? true : false,
+      editor:null,
       form: {
-        ID: '',
         title: '',
+        type: '',
         address: '',
-        resourceType: '',
-        isRentOut: false,
-        startDate: '',
-        endDate: '',
-        desc: '',
-        imgUrlList: []
+        location: null,
+        des: '',
       },
       createRules: {
         title: [{ required: true, trigger: 'blur', validator: validateTitle }],
-        resourceType: [{ required: true, trigger: 'blur', validator: validateResourceType }],
-        imgUrlList: [{ required: true, trigger: 'blur', validator: validateImgUrlList }]
-      },
-      dataObj: { bizType: 1 },
-      headers: {
-        ts: 1521450452371,
-        token: '4056a87b6101a0c16a85db1af0d0eace',
-        platform: 'WEB'
-      },
-      fileList: []
+      }
     }
   },
-  created() {
-    console.log('created')
-    const ID = this.$route.path.split('/')[3]
-    console.log(ID)
-    this.getHouseData(ID)
+
+  createed() {
+    console.log('createed')
   },
+
+  mounted() {
+    console.log('mounted')
+    this.getPartyBranchData(this.$route.path.split('/')[3])
+    this.initEditor()
+  },
+
   methods: {
-    onPicUploadSuccess(response, file, fileList) {
-      console.log(response)
-      console.log('---------------')
-      file.url = response.data.url
-      this.form.imgUrlList.push(response.data.url)
-      this.fileList.push({ name: '123.png', url: response.data.url })
-    },
-    onPicRemove(file, fileList) {
-      console.log(file)
-      this.form.imgUrlList = this.form.imgUrlList.filter(function(imgUrl) {
-        return imgUrl !== file.url
-      })
-      this.fileList = this.fileList.filter(function(fileData) {
-        return fileData.url !== file.url
-      })
-    },
-    beforeUpload(file) {
-      console.log(file)
-      const isJPGOoPNG = ['image/jpeg', 'image/png'].indexOf(file.type) !== -1
-      const isLt = file.size / 1024 / 1024 < 5
-      if (!isJPGOoPNG) {
-        this.$message.error('上传图片只能是jpg/png格式!')
+    initEditor(){
+      console.log('initEditor')
+      this.editor = new WangEditor('#editor')  //这个地方传入div元素的id 需要加#号
+      this.editor.change = function () { // 这里是change 不是官方文档中的 onchange
+        // 编辑区域内容变化时，实时打印出当前内容
+        console.log(this.txt.html())
       }
-      if (!isLt) {
-        this.$message.error('上传头像图片大小不能超过 5MB!')
-      }
-      return isJPGOoPNG && isLt
+      this.editorConfigUploadImg(this.editor)
+      this.editor.create()     // 生成编辑器
+      this.editor.txt.html('<p>输入内容...</p>')   //注意：这个地方是txt  不是官方文档中的$txt
     },
-    getHouseData(ID) {
-      getHouse(ID).then(response => {
-        console.log('---------')
+
+    editorConfigUploadImg(editor) {
+      editor.customConfig.debug = true
+      console.log(editor)
+      editor.customConfig.showLinkImg = false
+      editor.customConfig.uploadImgServer = 'http://picture-system-live.ejudata.com/qiniu/image/single'  // 上传图片到服务器
+      // // 图片上传限制
+      // editor.customConfig.uploadImgMaxSize = 5 * 1024 * 1024
+      // editor.customConfig.uploadImgMaxLength = 1
+      // header和 body 配置
+      editor.customConfig.uploadFileName = 'file'
+      editor.customConfig.uploadImgParams = {
+        bizType:2
+      },
+      editor.customConfig.uploadImgHeaders = {
+          ts: 1524539752494,
+          token: 'd4c349f09cc2dd8d5b2c2da3347c1497',
+          platform: 'WEB'
+      }
+      editor.customConfig.uploadImgTimeout = 8000
+      editor.customConfig.uploadImgHooks = {
+        before: function (xhr, editor, files) {
+            console.log('before')
+            console.log(files.length)
+            if(files.length > 1) {
+              alert('一次最多上传1张图片')
+              return {prevent: true,msg: '一次最多上传1张图片'}
+            }
+            const file = files[0]
+            const isJPGOoPNG = ['image/jpeg', 'image/png'].indexOf(file.type) !== -1
+            const isLt = file.size / 1024 / 1024 < 5
+            if (!isJPGOoPNG) {
+              alert('上传图片只能是jpg/png格式!')
+              return {prevent: true,msg: '上传图片只能是jpg/png格式'}
+            }
+            if (!isLt) {
+              alert('上传头像图片大小不能超过 5MB!')
+              return {prevent: true,msg: '上传头像图片大小不能超过 5MB!'}
+            } 
+            return {prevent:false}
+      },
+      timeout: function (xhr, editor) {
+         alert('请求超时')
+      },
+      customInsert: function (insertImg, result, editor) {
+        // 图片上传并返回结果，自定义插入图片的事件（而不是编辑器自动插入图片！！！）
+        // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
+        console.log(result)
+        // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
+        const url = result.data.url
+        insertImg(url)
+      }
+    }
+},
+    getPartyBranchData(ID) {
+      getPartyBranch(ID).then(response => {
+        console.log('get partyBranch success')
         console.log(response)
         this.form = response.data
-        console.log(this.form)
-        this.fileList = this.form.imgUrlList.map(function(imgUrl) {
-          return { name: '123.png', url: imgUrl }
-        })
-        console.log(this.fileList)
+        this.form.location = response.data.location + ''
+        this.editor.txt.html(this.form.des) 
       })
     },
-    editHouseData(newHouse) {
-      editHouse(newHouse).then(response => {
-        this.$message('edit success')
-        this.$router.push({ path: '/houses/index' })
-      })
-    },
-    deleteHouseData(ID) {
-      deleteHouse(ID).then(response => {
-        this.$message('delete success')
-        this.$router.push({ path: '/houses/index' })
-      })
-    },
-    onSave() {
+
+    onSubmit() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          console.log(this.form)
-          this.editHouseData(this.form)
+          this.createPartyBranchData(this.form)
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    onDelete() {
-      this.deleteHouseData(this.form.ID)
+
+    onCancel() {
+      // this.$message({
+      //   message: 'cancel!',
+      //   type: 'warning'
+      // })
+      this.$router.push({ path: '/branch/index' })
+    },
+
+    getLocationByAddress(){
+      console.log('getLocationByAddress')
+      const address = this.from.address;
+      console.log(address)
+      getLocation(address).then(location => {
+        this.form.location = location
+      })
     }
   }
 }
@@ -193,6 +197,10 @@ export default {
 <style scoped>
 .line{
   text-align: center;
+}
+.upload_img{
+  width: 0.2rem;
+  height: 0.2rem;
 }
 </style>
 

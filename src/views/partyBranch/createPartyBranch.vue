@@ -22,7 +22,7 @@
         <el-input v-model="form.location"></el-input>
       </el-form-item>
       <el-form-item label="党支部详情介绍">
-        <!-- <el-input type="textarea" v-model="form.desc"></el-input> -->
+        <!-- <el-input type="textarea" v-model="form.des"></el-input> -->
         <div id="editor"></div>
       </el-form-item>
       <el-form-item>
@@ -65,7 +65,7 @@ export default {
         type: '',
         address: '',
         location: null,
-        desc: '',
+        des: '',
       },
       createRules: {
         title: [{ required: true, trigger: 'blur', validator: validateTitle }],
@@ -86,7 +86,7 @@ export default {
       this.editor.change = function () { // 这里是change 不是官方文档中的 onchange
         // 编辑区域内容变化时，实时打印出当前内容
         console.log(this.txt.html())
-        this.form.desc = this.txt.html()
+        this.form.des = this.txt.html()
       }
       this.editorConfigUploadImg(this.editor)
       this.editor.create()     // 生成编辑器
@@ -133,17 +133,6 @@ export default {
             } 
             return {prevent:false}
       },
-      // success: function (xhr, editor, result) {
-      // },
-      // fail: function (xhr, editor, result) {
-      //   console.log(xhr)
-      //   console.log(result)
-      //   // 图片上传并返回结果，但图片插入错误时触发
-      //   // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
-      // },
-      // error: function (xhr, editor) {
-      //   console.log('errror')
-      // },
       timeout: function (xhr, editor) {
          alert('请求超时')
       },
