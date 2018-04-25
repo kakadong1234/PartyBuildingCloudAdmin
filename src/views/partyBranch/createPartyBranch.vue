@@ -26,6 +26,7 @@
         <div id="editor"></div>
       </el-form-item>
       <el-form-item>
+        <el-button @click="openBranchDesPage">党支部详情页面</el-button>
         <el-button type="primary" @click="onSubmit">创建</el-button>
         <el-button @click="onCancel">取消</el-button>
       </el-form-item>
@@ -194,6 +195,10 @@ export default {
 
     onCancel() {
       this.$router.push({ path: '/branch/index' })
+    },
+
+    openBranchDesPage() {
+      window.open(window.location.origin + '#/branch/des')
     },
 
     getLocationByAddress(){

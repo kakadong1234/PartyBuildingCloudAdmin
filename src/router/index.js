@@ -140,8 +140,23 @@ export const constantRouterMap = [
         name: '编辑',
         hidden: true,
         component: () => import('@/views/partyBranch/detailPartyBranch')
-      }
+      },
+      // {
+      //   path: 'des',
+      //   name: '党支部管理',
+      //   hidden: true,
+      //   component: () => import('@/views/partyBranch/branchDes')
+      // },
     ]
+  },
+
+  {
+    path: '/branch/des',
+    // component: Layout,
+    // redirect: '/branch/index',
+    name: '党支部',
+    hidden: true,
+    component: () => import('@/views/partyBranch/branchDes')
   },
 
   {
