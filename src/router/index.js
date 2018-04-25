@@ -77,37 +77,44 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/partybuilding',
+    path: '/news',
     component: Layout,
-    redirect: '/partybuilding/index',
+    redirect: '/news/index',
     name: '党建新闻',
     meta: { title: '党建新闻', icon: 'news' },
     children: [
       {
         path: 'index',
         name: '党建新闻管理',
-        component: () => import('@/views/houses/index'),
+        component: () => import('@/views/news/index'),
         meta: { title: '党建新闻管理', icon: 'news' }
       },
       {
         path: 'create',
         name: '添加',
         hidden: true,
-        component: () => import('@/views/houses/createHouse'),
+        component: () => import('@/views/news/createNews'),
       },
       {
         path: 'detail/:id',
         name: '详情',
         hidden: true,
-        component: () => import('@/views/houses/detailHouse')
+        component: () => import('@/views/news/detailNews')
       },
       {
         path: 'edit/:id',
         name: '编辑',
         hidden: true,
-        component: () => import('@/views/houses/detailHouse')
+        component: () => import('@/views/news/detailNews')
       }
     ]
+  },
+
+  {
+    path: '/news/des',
+    name: '党建新闻详情页面',
+    hidden: true,
+    component: () => import('@/views/news/newsDes')
   },
 
   {
@@ -141,19 +148,11 @@ export const constantRouterMap = [
         hidden: true,
         component: () => import('@/views/partyBranch/detailPartyBranch')
       },
-      // {
-      //   path: 'des',
-      //   name: '党支部管理',
-      //   hidden: true,
-      //   component: () => import('@/views/partyBranch/branchDes')
-      // },
     ]
   },
 
   {
     path: '/branch/des',
-    // component: Layout,
-    // redirect: '/branch/index',
     name: '党支部',
     hidden: true,
     component: () => import('@/views/partyBranch/branchDes')
