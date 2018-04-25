@@ -10,7 +10,7 @@
           <el-option label="普通党支部" value="02"></el-option>
         </el-select>  
       </el-form-item>
-      <el-form-item label="地址">
+      <el-form-item label="地址" prop="address">
         <el-col :span="11">
           <el-input v-model="form.address" :disabled="!isEdit"></el-input>
         </el-col>
@@ -18,10 +18,10 @@
           <el-button type="primary" @click="getLocationByAddress()">生成经纬度</el-button>
         </el-col>
       </el-form-item>
-      <el-form-item label="经纬度">
-        <el-input v-model="form.location" :disabled="!isEdit"></el-input>
+      <el-form-item label="经纬度" prop="location">
+        <el-input v-model="form.location" :disabled=true></el-input>
       </el-form-item>
-      <el-form-item label="党支部详情介绍">
+      <el-form-item label="党支部详情介绍" prop="des">
         <!-- <el-input type="textarea" v-model="form.des"></el-input> -->
         <div id="editor"></div>
       </el-form-item>
@@ -53,9 +53,34 @@ export default {
         callback()
       }
     }
-    const validateResourceType = (rule, value, callback) => {
-      if (!isValidResourceType(value)) {
+
+    const validateType = (rule, value, callback) => {
+      if (!value) {
         callback(new Error('请选择正确的党支部类型'))
+      } else {
+        callback()
+      }
+    }
+
+    const validateAddress = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入正确的地址'))
+      } else {
+        callback()
+      }
+    }
+
+    const validateLocation = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请先点击生成经纬度按钮,获取经纬度'))
+      } else {
+        callback()
+      }
+    }
+    
+    const validateDes = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入正确的党支部详情'))
       } else {
         callback()
       }
@@ -74,13 +99,12 @@ export default {
       },
       createRules: {
         title: [{ required: true, trigger: 'blur', validator: validateTitle }],
+        type: [{required: true, trigger: 'blur', validator: validateType }],
+        address: [{required: true, trigger: 'blur', validator: validateAddress }],
+        location: [{ required: true, trigger: 'blur', validator: validateLocation }],
+        des: [{required: true, trigger: 'blur', validator: validateDes }],
       }
     }
-  },
-
-  createed() {
-    console.log('created')
-    console.log(this.isEdit)
   },
 
   mounted() {
@@ -100,7 +124,12 @@ export default {
       }
       this.editorConfigUploadImg(this.editor)
       this.editor.create()     // 生成编辑器
-      this.editor.txt.html('<p>输入内容...</p>')   //注意：这个地方是txt  不是官方文档中的$txt
+      console.log(this.isEdit)
+      if(!this.isEdit) {
+        console.log('---------------------------------')
+        this.editor.$textElem.attr('contenteditable', false)
+      }
+      // this.editor.txt.html('<p>输入内容...</p>')   //注意：这个地方是txt  不是官方文档中的$txt
     },
 
     editorConfigUploadImg(editor) {
@@ -174,10 +203,10 @@ export default {
     },
 
     onSubmit() {
+      this.form.des = this.editor.txt.html()
       this.$refs.form.validate(valid => {
         if (valid) {
           console.log('--------')
-          this.form.des = this.editor.txt.html()
           console.log(this.form)
           this.editPartyBranchata(this.form)
         } else {
@@ -188,19 +217,16 @@ export default {
     },
 
     onCancel() {
-      // this.$message({
-      //   message: 'cancel!',
-      //   type: 'warning'
-      // })
       this.$router.push({ path: '/branch/index' })
     },
 
     getLocationByAddress(){
       console.log('getLocationByAddress')
-      const address = this.from.address;
+      const address = this.form.address;
       console.log(address)
       getLocation(address).then(location => {
-        this.form.location = location
+        console.log(location)
+        this.form.location = location + ''
       })
     }
   }

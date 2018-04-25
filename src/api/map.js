@@ -2,7 +2,7 @@ export function getLocation(address) {
     console.log('getLocation')
     return new Promise(function(reslove, reject) {
         AMap.service('AMap.Geocoder',function(){
-            new AMap.Geocoder({}).getLocation("六盘水市", function(status, result) {
+            new AMap.Geocoder({}).getLocation(address, function(status, result) {
               console.log('-----------status:' + status)
               if (status === 'complete' && result.info === 'OK') {
                 const location = result.geocodes[0].location

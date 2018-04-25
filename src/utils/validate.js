@@ -31,17 +31,17 @@ export function validatAlphabets(str) {
   return reg.test(str)
 }
 
-/* houses */
+/* partyBranch */
 
 /* title*/
 export function isValidTitle(str) {
-  return str.length <= 50
+  return str && str.length <= 1000
 }
 
-/* resourceType*/
+/*location*/
 export function isValidResourceType(str) {
   return ['V01', 'V02', 'V03', 'V4'].indexOf(str) !== -1
 }
 
-/* houses */
+/* partyBranch */
 
