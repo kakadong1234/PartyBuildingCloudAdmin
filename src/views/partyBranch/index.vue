@@ -11,7 +11,6 @@
   </div>
   <el-table v-if="tableData.length" class='party_branch_table' :data='tableData' stripe border @selection-change="handleSelectionChange" highlight-current-row @current-change="handleCurrentChange">
         <!-- <el-table-column prop='ID' label='ID' width='100'></el-table-column> -->
-        <!-- <el-table-column prop='resourceType' label='资源ID' width='180' :filters='resourceTypeFilersData' :filter-method='filterHandler'></el-table-column> -->
         <el-table-column prop='title' label='名称' width='180'></el-table-column>
         <el-table-column prop='address' label='地址'></el-table-column>
         <el-table-column prop='location' label='经纬度' width='60'></el-table-column>
@@ -24,16 +23,16 @@
           <template slot-scope='scope'>
             <el-button @click.stop='detailRow(scope.$index, scope.row, scope.column, tableData)' type='primary' size='mini'>详情</el-button>
             <el-button @click.stop='editRow(scope.$index, scope.row, scope.column, tableData)' type='primary' size='mini'>编辑</el-button>
-            <el-button @click.stop='deleteRow(scope.$index, scope.row, scope.column, tableData)' type='danger' size='mini'>删除</el-button>
+            <el-button @click.stop='isShowDeleteDialog(scope.$index, scope.row, scope.column, tableData)' type='danger' size='mini'>删除</el-button>
           </template>
         </el-table-column>
     </el-table>
     <div class='no_data_div' v-else >无党支部数据!</div>
-    <el-dialog title="删除提示" :visible.sync="dialogVisible" width="30%">
-      <span>是否删除 {{multipleSelection.length}}项数据?</span>
+    <el-dialog title="删除提示" :visible.sync="dialogVisible" width="30%" center>
+      <span>是否删除该数据?</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false" @click.native.prevent='deleteRow()'>确 定</el-button>
+        <el-button type="primary" @click.stop='deleteRow()'>确 定</el-button>
       </span>
     </el-dialog>
 
@@ -83,17 +82,21 @@ export default {
         this.allBranchData = response.data.lists
       })
     },
+
+    deleteData(ID) {
+      deletePartyBranch(ID)
+    },
+
     handleCurrentChange(val) {
       console.log(val)
       this.currentRow = val
       // TODO跳转 router
       this.$router.push({ path: '/branch/detail/' + this.currentRow.ID })
     },
-    isShowDeleteDialog() {
+    isShowDeleteDialog(index, row, column, data) {
       console.log('isShowDeleteDialog')
-      if (this.multipleSelection.length !== 0) {
-        this.dialogVisible = true
-      }
+      this.currentRow = row
+      this.dialogVisible = true
     },
     searchPartyBranch(){
       console.log('searchPartyBranch, searchValue is ' + this.searchValue)
@@ -111,9 +114,6 @@ export default {
       console.log('---------')
       this.multipleSelection = val
     },
-    filterHandler(value, row, column) {
-      return row.resourceType === value
-    },
     createRow() {
       console.log('create')
       // TODO: 跳转到创建页面
@@ -129,13 +129,9 @@ export default {
     },
     deleteRow() {
       console.log('delete')
-      // TODO:请求deletes接口
-      const selectionData = this.multipleSelection
-      this.tableData = this.tableData.filter(function(data) {
-        return selectionData.map(function(selection) {
-          return selection.ID
-        }).indexOf(data.ID) === -1
-      })
+      this.deleteData(this.currentRow.ID)
+      this.dialogVisible = false
+      this.fetchData()
     }
   }
 }

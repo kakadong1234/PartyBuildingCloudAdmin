@@ -161,7 +161,7 @@ export function deletePartyBranch(ID) {
   //   method: 'delete'
   // })
   return new Promise(function(reslove, reject) {
-    MOCK_HOUSES = MOCK_HOUSES.filter(function(brnach) {
+    MOCK_HOUSES = MOCK_HOUSES.filter(function(branch) {
       return branch.ID !== parseInt(ID)
     })
     reslove()
