@@ -138,7 +138,7 @@ export function editNews(newNews) {
       if (news.ID === parseInt(newNews.ID)) {
         return newNews
       }
-      return branch
+      return news
     })
     reslove()
   })

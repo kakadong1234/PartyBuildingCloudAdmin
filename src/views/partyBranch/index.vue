@@ -48,24 +48,6 @@ export default {
       searchValue: '',
       tableData: [],
       allBranchData: [],
-      resourceTypeFilersData: [
-        {
-          text: 'V01',
-          value: 'V01'
-        },
-        {
-          text: 'V02',
-          value: 'V02'
-        },
-        {
-          text: 'V03',
-          value: 'V03'
-        },
-        {
-          text: 'V4',
-          value: 'V4'
-        }
-      ],
       multipleSelection: [],
       dialogVisible: false,
       currentRow: null
