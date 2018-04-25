@@ -86,7 +86,6 @@ export default {
       this.editor.change = function () { // 这里是change 不是官方文档中的 onchange
         // 编辑区域内容变化时，实时打印出当前内容
         console.log(this.txt.html())
-        this.form.des = this.txt.html()
       }
       this.editorConfigUploadImg(this.editor)
       this.editor.create()     // 生成编辑器
@@ -156,6 +155,8 @@ export default {
     onSubmit() {
       this.$refs.form.validate(valid => {
         if (valid) {
+          this.form.des = this.editor.txt.html()
+          console.log(this.form)
           this.createPartyBranchData(this.form)
         } else {
           console.log('error submit!!')
@@ -174,7 +175,7 @@ export default {
 
     getLocationByAddress(){
       console.log('getLocationByAddress')
-      const address = this.from.address;
+      const address = this.form.address;
       console.log(address)
       getLocation(address).then(location => {
         this.form.location = location

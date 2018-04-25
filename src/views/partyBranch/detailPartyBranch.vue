@@ -2,24 +2,24 @@
   <div class="app-container">
     <el-form ref="form" :model="form" :rules="createRules" label-width="120px">
       <el-form-item label="党支部名称" prop="title">
-        <el-input v-model="form.title"></el-input>
+        <el-input v-model="form.title" :disabled="!isEdit"></el-input>
       </el-form-item>
       <el-form-item label="党支部类型" prop="type">
-        <el-select v-model="form.type" placeholder="请选择党支部类型">
+        <el-select v-model="form.type" placeholder="请选择党支部类型" :disabled="!isEdit">
           <el-option label="党建示范点" value="01"></el-option>
           <el-option label="普通党支部" value="02"></el-option>
         </el-select>  
       </el-form-item>
       <el-form-item label="地址">
         <el-col :span="11">
-          <el-input v-model="form.address"></el-input>
+          <el-input v-model="form.address" :disabled="!isEdit"></el-input>
         </el-col>
-        <el-col :span="2">
+        <el-col v-if="isEdit" :span="2">
           <el-button type="primary" @click="getLocationByAddress()">生成经纬度</el-button>
         </el-col>
       </el-form-item>
       <el-form-item label="经纬度">
-        <el-input v-model="form.location"></el-input>
+        <el-input v-model="form.location" :disabled="!isEdit"></el-input>
       </el-form-item>
       <el-form-item label="党支部详情介绍">
         <!-- <el-input type="textarea" v-model="form.des"></el-input> -->
@@ -65,6 +65,7 @@ export default {
       isEdit: this.$route.path.split('/')[2] === 'edit' ? true : false,
       editor:null,
       form: {
+        ID: this.$route.path.split('/')[3],
         title: '',
         type: '',
         address: '',
@@ -78,12 +79,14 @@ export default {
   },
 
   createed() {
-    console.log('createed')
+    console.log('created')
+    console.log(this.isEdit)
   },
 
   mounted() {
     console.log('mounted')
-    this.getPartyBranchData(this.$route.path.split('/')[3])
+    console.log(this.isEdit)
+    this.getPartyBranchData(this.form.ID)
     this.initEditor()
   },
 
@@ -163,10 +166,20 @@ export default {
       })
     },
 
+    editPartyBranchata(branch) {
+      editPartyBranch(branch).then(response => {
+        console.log('edit success')
+        this.$router.push({ path: '/branch/index' })
+      })
+    },
+
     onSubmit() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.createPartyBranchData(this.form)
+          console.log('--------')
+          this.form.des = this.editor.txt.html()
+          console.log(this.form)
+          this.editPartyBranchata(this.form)
         } else {
           console.log('error submit!!')
           return false
