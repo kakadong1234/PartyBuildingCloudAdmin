@@ -150,20 +150,14 @@ export const constantRouterMap = [
     path: '/study',
     component: Layout,
     redirect: '/study/index',
-    name: '在线学习',
-    meta: { title: '在线学习', icon: 'study' },
+    name: '教学资源',
+    meta: { title: '教学资源', icon: 'study' },
     children: [
       {
         path: 'index',
         name: '教学资源管理',
         component: () => import('@/views/study/index'),
         meta: { title: '教学资源管理', icon: 'resources' }
-      },
-      {
-        path: 'setting',
-        name: '学习时长设置',
-        component: () => import('@/views/study/setting'),
-        meta: { title: '学习时长设置', icon: 'setting' }
       },
       {
         path: 'statistics',
@@ -189,7 +183,7 @@ export const constantRouterMap = [
         name: '编辑',
         hidden: true,
         component: () => import('@/views/study/detailStudy')
-      }
+      },
     ]
   },
 
@@ -198,6 +192,34 @@ export const constantRouterMap = [
     name: '学习资源',
     hidden: true,
     component: () => import('@/views/study/studyDes')
+  },
+
+  {
+    path: '/studyTime',
+    component: Layout,
+    redirect: '/studyTime/index',
+    name: '学习时长',
+    meta: { title: '学习时长', icon: 'study' },
+    children: [
+      {
+        path: 'index',
+        name: '学习时长设置',
+        component: () => import('@/views/studyTime/index'),
+        meta: { title: '学习时长设置', icon: 'resources' }
+      },
+      {
+        path: 'detail/:id',
+        name: '详情',
+        hidden: true,
+        component: () => import('@/views/studyTime/detailStudyTime')
+      },
+      {
+        path: 'edit/:id',
+        name: '编辑',
+        hidden: true,
+        component: () => import('@/views/studyTime/detailStudyTime')
+      }
+    ]
   },
 
   {
