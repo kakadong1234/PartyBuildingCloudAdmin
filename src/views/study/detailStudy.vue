@@ -2,24 +2,33 @@
   <div class="app-container">
     <el-form ref="form" :model="form" :rules="createRules" label-width="120px">
       <el-form-item label="标题" prop="title">
-        <el-input v-model="form.title"></el-input>
+        <el-input v-model="form.title" :disabled="!isEdit"></el-input>
       </el-form-item>
-      <el-form-item label="党建新闻详情介绍" prop="des">
+      <el-form-item label="作者" prop="author">
+        <el-input v-model="form.author" :disabled=true></el-input>
+      </el-form-item>
+      <el-form-item label="审核状态:" prop="reviewStatus">
+        <el-switch v-model="!form.reviewStatus" active-text="完成审核" inactive-text="正在审核" :disabled=true></el-switch>
+      </el-form-item>
+      <el-form-item label="学习资料详情" prop="des">
         <!-- <el-input type="textarea" v-model="form.des"></el-input> -->
         <div id="editor"></div>
       </el-form-item>
-      <el-form-item>
-        <el-button @click="openNewsDesPage">党建新闻详情页面</el-button>
-        <el-button type="primary" @click="onSubmit">创建</el-button>
+      <el-form-item v-if="isEdit" >
+        <el-button @click="openStudyDesPage">学习资料详情页面</el-button>
+        <el-button type="primary" @click="onSubmit">编辑</el-button>
         <el-button @click="onCancel">取消</el-button>
+      </el-form-item>
+      <el-form-item v-else >
+        <el-button @click="onCancel">返回</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
-import { isValidTitle } from '@/utils/validate'
-import { createNews } from '@/api/news'
+import { isValidTitle} from '@/utils/validate'
+import { getStudy, editStudy} from '@/api/study'
 import WangEditor from 'wangeditor'
 // import '@/utils/custom-menu'
 
@@ -28,24 +37,29 @@ export default {
     const validateTitle = (rule, value, callback) => {
       console.log('-----------------123')
       if (!isValidTitle(value)) {
-        callback(new Error('请输入正确的党支部名称'))
+        callback(new Error('请输入正确的标题'))
       } else {
         callback()
       }
     }
-
     const validateDes = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入正确的党支部详情'))
+        callback(new Error('请输入正确的详情'))
       } else {
         callback()
       }
     }
 
     return {
+      isEdit: this.$route.path.split('/')[2] === 'edit' ? true : false,
       editor:null,
       form: {
+        ID: this.$route.path.split('/')[3],
         title: '',
+        author: '',
+        isPublic: '',
+        reviewStatus: '',
+        isGood: '',
         des: '',
       },
       createRules: {
@@ -57,19 +71,27 @@ export default {
 
   mounted() {
     console.log('mounted')
+    console.log(this.isEdit)
+    this.getStudyData(this.form.ID)
     this.initEditor()
   },
 
   methods: {
-
     initEditor(){
       console.log('initEditor')
-      this.editor = new WangEditor('#editor')
-      this.editor.change = function () { 
-        console.log(this.txt.html())// 编辑区域内容变化时，实时打印出当前内容
+      this.editor = new WangEditor('#editor')  //这个地方传入div元素的id 需要加#号
+      this.editor.change = function () { // 这里是change 不是官方文档中的 onchange
+        // 编辑区域内容变化时，实时打印出当前内容
+        console.log(this.txt.html())
       }
       this.editorConfigUploadImg(this.editor)
       this.editor.create()     // 生成编辑器
+      console.log(this.isEdit)
+      if(!this.isEdit) {
+        console.log('---------------------------------')
+        this.editor.$textElem.attr('contenteditable', false)
+      }
+      // this.editor.txt.html('<p>输入内容...</p>')   //注意：这个地方是txt  不是官方文档中的$txt
     },
 
     editorConfigUploadImg(editor) {
@@ -125,10 +147,20 @@ export default {
       }
     }
 },
-    createNewsData(news) {
-      createNews(news).then(response => {
-        console.log('create success')
-        this.$router.push({ path: '/news/index' })
+    getStudyData(ID) {
+      getStudy(ID).then(response => {
+        console.log('get study success')
+        console.log(response)
+        response.data.reviewStatus = response.data.review.status === 0
+        this.form = response.data
+        this.editor.txt.html(this.form.des) 
+      })
+    },
+
+    editStudyData(study) {
+      editStudy(study).then(response => {
+        console.log('edit success')
+        this.$router.push({ path: '/study/index' })
       })
     },
 
@@ -136,8 +168,9 @@ export default {
       this.form.des = this.editor.txt.html()
       this.$refs.form.validate(valid => {
         if (valid) {
+          console.log('--------')
           console.log(this.form)
-          this.createNewsData(this.form)
+          this.editStudyData(this.form)
         } else {
           console.log('error submit!!')
           return false
@@ -146,11 +179,11 @@ export default {
     },
 
     onCancel() {
-      this.$router.push({ path: '/news/index' })
+      this.$router.push({ path: '/study/index' })
     },
 
-    openNewsDesPage() {
-      window.open(window.location.origin + '#/news/des')
+    openStudyDesPage() {
+      window.open(window.location.origin + '#/study/des')
     }
   }
 }

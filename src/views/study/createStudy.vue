@@ -4,12 +4,12 @@
       <el-form-item label="标题" prop="title">
         <el-input v-model="form.title"></el-input>
       </el-form-item>
-      <el-form-item label="党建新闻详情介绍" prop="des">
+      <el-form-item label="教学资源详情" prop="des">
         <!-- <el-input type="textarea" v-model="form.des"></el-input> -->
         <div id="editor"></div>
       </el-form-item>
       <el-form-item>
-        <el-button @click="openNewsDesPage">党建新闻详情页面</el-button>
+        <el-button @click="openStudyDesPage">教学资源详情页面</el-button>
         <el-button type="primary" @click="onSubmit">创建</el-button>
         <el-button @click="onCancel">取消</el-button>
       </el-form-item>
@@ -19,7 +19,7 @@
 
 <script>
 import { isValidTitle } from '@/utils/validate'
-import { createNews } from '@/api/news'
+import { createStudy } from '@/api/study'
 import WangEditor from 'wangeditor'
 // import '@/utils/custom-menu'
 
@@ -28,7 +28,7 @@ export default {
     const validateTitle = (rule, value, callback) => {
       console.log('-----------------123')
       if (!isValidTitle(value)) {
-        callback(new Error('请输入正确的党支部名称'))
+        callback(new Error('请输入正确的标题'))
       } else {
         callback()
       }
@@ -36,7 +36,7 @@ export default {
 
     const validateDes = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入正确的党支部详情'))
+        callback(new Error('请输入正确的详情'))
       } else {
         callback()
       }
@@ -125,10 +125,10 @@ export default {
       }
     }
 },
-    createNewsData(news) {
-      createNews(news).then(response => {
+    createStudyData(study) {
+      createStudy(study).then(response => {
         console.log('create success')
-        this.$router.push({ path: '/news/index' })
+        this.$router.push({ path: '/study/index' })
       })
     },
 
@@ -137,7 +137,7 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           console.log(this.form)
-          this.createNewsData(this.form)
+          this.createStudyData(this.form)
         } else {
           console.log('error submit!!')
           return false
@@ -146,11 +146,11 @@ export default {
     },
 
     onCancel() {
-      this.$router.push({ path: '/news/index' })
+      this.$router.push({ path: '/study/index' })
     },
 
-    openNewsDesPage() {
-      window.open(window.location.origin + '#/news/des')
+    openStudyDesPage() {
+      window.open(window.location.origin + '#/study/des')
     }
   }
 }

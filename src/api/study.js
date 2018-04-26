@@ -2,15 +2,9 @@
 let MOCK_HOUSES = [
   {
     ID: 1,
-    title: '新闻01',
-    des: '新闻01很好很好，非常好',
+    title: '教学资源01',
+    des: '教学资源01很好很好，非常好',
     author: '晓伟01',
-    isPublic: false, //是否对外可见 (true 表示在首页-新闻动态中可见)
-    isGood: false, //是否是好文章,( true 表示在首页-他山之玉中可见)
-    partyBranch: { //关联党支部
-      ID: 1,
-      title: '党支部01'
-    },
     review: { //关联审核
       status: 0,
       currentReviewID: 2,
@@ -30,15 +24,9 @@ let MOCK_HOUSES = [
  
   {
     ID: 2,
-    title: '新闻02',
-    des: '新闻02很好很好，非常好',
+    title: '教学资源02',
+    des: '教学资源02很好很好，非常好',
     author: '晓伟02',
-    isPublic: true, //是否对外可见 (true 表示在首页-新闻动态中可见)
-    isGood: true, //是否是好文章,( true 表示在首页-他山之玉中可见)
-    partyBranch: { //关联党支部
-      ID: 2,
-      title: '党支部02'
-    },
     review: { //关联审核
       status: 1,
       currentReviewID: 4,
@@ -59,15 +47,9 @@ let MOCK_HOUSES = [
 
   {
     ID: 3,
-    title: '新闻03',
-    des: '新闻03很好很好，非常好',
+    title: '教学资源03',
+    des: '教学资源03很好很好，非常好',
     author: '晓伟03',
-    isPublic: false, //是否对外可见 (true 表示在首页-新闻动态中可见)
-    isGood: false, //是否是好文章,( true 表示在首页-他山之玉中可见)
-    partyBranch: { //关联党支部
-      ID: 3,
-      title: '党支部03'
-    },
     review: { //关联审核
       status: 0,
       currentReviewID: 1,
@@ -82,8 +64,8 @@ let MOCK_HOUSES = [
   },
 ]
 
-export function getNewsList() {
-  console.log('getNewsList request')
+export function getStudyList() {
+  console.log('getStudyList request')
   // return request({
   //   url: '/houses',
   //   method: 'get'
@@ -97,7 +79,7 @@ export function getNewsList() {
   })
 }
 
-export function createNews(news) {
+export function createStudy(study) {
   console.log('create request')
   // return request({
   //   url: '/houses',
@@ -105,57 +87,57 @@ export function createNews(news) {
   //   data: house
   // })
   return new Promise(function(reslove, reject) {
-    news.ID = 11
-    news.author = '晓伟04'
-    news.review = {}
-    news.review.status = 0
-    MOCK_HOUSES.push(news)
+    study.ID = 11
+    study.author = '晓伟04'
+    study.review = {}
+    study.review.status = 0
+    MOCK_HOUSES.push(study)
     reslove()
   })
 }
 
-export function getNews(ID) {
-  console.log('getNews request')
+export function getStudy(ID) {
+  console.log('getStudy request')
   // return request({
   //   url: '/houses/' + ID,
   //   method: 'get'
   // })
   return new Promise(function(reslove, reject) {
     const data = {}
-    data.data = MOCK_HOUSES.find(function(news) {
-      return news.ID === parseInt(ID)
+    data.data = MOCK_HOUSES.find(function(study) {
+      return study.ID === parseInt(ID)
     })
     reslove(data)
   })
 }
 
-export function editNews(newNews) {
-  console.log('editNews request')
+export function editStudy(newStudy) {
+  console.log('editStudy request')
   // return request({
   //   url: '/houses/' + newHouse.ID,
   //   method: 'post',
   //   data: newHouse
   // })
   return new Promise(function(reslove, reject) {
-    MOCK_HOUSES = MOCK_HOUSES.map(function(news) {
-      if (news.ID === parseInt(newNews.ID)) {
-        return newNews
+    MOCK_HOUSES = MOCK_HOUSES.map(function(study) {
+      if (study.ID === parseInt(newStudy.ID)) {
+        return newStudy
       }
-      return news
+      return study
     })
     reslove()
   })
 }
 
-export function deleteNews(ID) {
-  console.log('deleteNews request')
+export function deleteStudy(ID) {
+  console.log('deleteStudy request')
   // return request({
   //   url: '/houses/' + ID,
   //   method: 'delete'
   // })
   return new Promise(function(reslove, reject) {
-    MOCK_HOUSES = MOCK_HOUSES.filter(function(news) {
-      return news.ID !== parseInt(ID)
+    MOCK_HOUSES = MOCK_HOUSES.filter(function(study) {
+      return study.ID !== parseInt(ID)
     })
     reslove()
   })

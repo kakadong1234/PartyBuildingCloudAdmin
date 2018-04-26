@@ -156,13 +156,13 @@ export const constantRouterMap = [
       {
         path: 'index',
         name: '教学资源管理',
-        component: () => import('@/views/houses/index'),
+        component: () => import('@/views/study/index'),
         meta: { title: '教学资源管理', icon: 'resources' }
       },
       {
         path: 'setting',
         name: '学习时长设置',
-        component: () => import('@/views/houses/index'),
+        component: () => import('@/views/study/setting'),
         meta: { title: '学习时长设置', icon: 'setting' }
       },
       {
@@ -176,21 +176,28 @@ export const constantRouterMap = [
         path: 'create',
         name: '添加',
         hidden: true,
-        component: () => import('@/views/houses/createHouse'),
+        component: () => import('@/views/study/createStudy'),
       },
       {
         path: 'detail/:id',
         name: '详情',
         hidden: true,
-        component: () => import('@/views/houses/detailHouse')
+        component: () => import('@/views/study/detailStudy')
       },
       {
         path: 'edit/:id',
         name: '编辑',
         hidden: true,
-        component: () => import('@/views/houses/detailHouse')
+        component: () => import('@/views/study/detailStudy')
       }
     ]
+  },
+
+  {
+    path: '/study/des',
+    name: '学习资源',
+    hidden: true,
+    component: () => import('@/views/study/studyDes')
   },
 
   {
