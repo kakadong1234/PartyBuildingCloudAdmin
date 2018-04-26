@@ -13,9 +13,9 @@
         <!-- <el-table-column prop='ID' label='ID' width='100'></el-table-column> -->
         <el-table-column prop='title' label='标题' width='180'></el-table-column>
         <el-table-column prop='author' label='作者'></el-table-column>
-        <el-table-column prop='isPublic' label='是否公布' width='60'></el-table-column>
-        <el-table-column prop='reviewStatus' label='审核状态' width='60'></el-table-column>
-        <el-table-column prop ='isGood' label='是否优秀' width='220'></el-table-column>
+        <el-table-column prop='isPublicTxt' label='是否公布' width='60'></el-table-column>
+        <el-table-column prop='reviewStatusTxt' label='审核状态' width='60'></el-table-column>
+        <el-table-column prop ='isGoodTxt' label='是否优秀' width='220'></el-table-column>
         <el-table-column fixed='right' label='操作' width='220'>
           <template slot-scope='scope'>
             <el-button @click.stop='detailRow(scope.$index, scope.row, scope.column, tableData)' type='primary' size='mini'>详情</el-button>
@@ -58,9 +58,9 @@ export default {
     fetchData() {
       getNewsList().then(response => {
         const list = response.data.lists.map(function(news) {
-          news.isPublic = news.isPublic ? '已公布' : '未公布'
-          news.isGood= news.isGood? '优秀' : '普通'
-          news.reviewStatus = news.review.status === 0 ? '正在审核' : '完成审核'
+          news.isPublicTxt = news.isPublic ? '已公布' : '未公布'
+          news.isGoodTxt = news.isGood? '优秀' : '普通'
+          news.reviewStatusTxt = news.review.status === 0 ? '正在审核' : '完成审核'
           return news
         })
         this.tableData = list

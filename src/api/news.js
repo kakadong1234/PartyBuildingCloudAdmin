@@ -83,7 +83,7 @@ let MOCK_HOUSES = [
 ]
 
 export function getNewsList() {
-  console.log('getNews request')
+  console.log('getNewsList request')
   // return request({
   //   url: '/houses',
   //   method: 'get'

@@ -55,24 +55,12 @@ export const constantRouterMap = [
         component: () => import('@/views/houses/index'),
         meta: { title: '党员管理', icon: 'partymember' }
       },
-      // {
-      //   path: 'create',
-      //   name: '添加',
-      //   hidden: true,
-      //   component: () => import('@/views/houses/createHouse'),
-      // },
       {
         path: 'detail/:id',
         name: '详情',
         hidden: true,
-        component: () => import('@/views/houses/detailHouse')
+        component: () => import('@/views/houses/detailHouse') //有分析图
       },
-      // {
-      //   path: 'edit/:id',
-      //   name: '编辑',
-      //   hidden: true,
-      //   component: () => import('@/views/houses/detailHouse')
-      // }
     ]
   },
 
@@ -209,8 +197,8 @@ export const constantRouterMap = [
     path: '/exam',
     component: Layout,
     redirect: '/exam/index',
-    name: '考试中心',
-    meta: { title: '考试中心', icon: 'exam' },
+    name: '试题库管理',
+    meta: { title: '试题库管理', icon: 'exam' },
     children: [
       {
         path: 'index',
@@ -219,18 +207,45 @@ export const constantRouterMap = [
         meta: { title: '试题库管理', icon: 'resources' }
       },
       {
-        path: 'setting',
-        name: '考试设置',
-        component: () => import('@/views/houses/index'),
-        meta: { title: '考试设置', icon: 'setting' }
-      },
-      {
         path: 'statistics',
         name: '统计',
         component: () => import('@/views/houses/index'),
         meta: { title: '统计', icon: 'statistics' }
       },
+      {
+        path: 'create',
+        name: '添加',
+        hidden: true,
+        component: () => import('@/views/houses/createHouse'),
+      },
+      {
+        path: 'detail/:id',
+        name: '详情',
+        hidden: true,
+        component: () => import('@/views/houses/detailHouse')
+      },
+      {
+        path: 'edit/:id',
+        name: '编辑',
+        hidden: true,
+        component: () => import('@/views/houses/detailHouse')
+      }
+    ]
+  },
 
+  {
+    path: '/examPaper',
+    component: Layout,
+    redirect: '/examPaper/index',
+    name: '试卷管理',
+    meta: { title: '试卷管理', icon: 'exam' },
+    children: [
+      {
+        path: 'index',
+        name: '试卷管理',
+        component: () => import('@/views/houses/index'),
+        meta: { title: '试卷管理', icon: 'resources' }
+      },
       {
         path: 'create',
         name: '添加',
@@ -289,6 +304,35 @@ export const constantRouterMap = [
         name: '编辑',
         hidden: true,
         component: () => import('@/views/houses/detailHouse')
+      }
+    ]
+  },
+
+  {
+    path: '/profile',
+    component: Layout,
+    redirect: '/profile/index',
+    name: '我的',
+    meta: { title: '我的', icon: 'meeting' },
+    children: [
+      {
+        path: 'sendReview',
+        name: '我发起的审批',
+        component: () => import('@/views/houses/index'),
+        meta: { title: '我发起的审批', icon: 'meeting' }
+      },
+      {
+        path: 'receiveReview',
+        name: '我收到的审批',
+        component: () => import('@/views/houses/index'),
+        meta: { title: '我收到的审批', icon: 'meeting' }
+      },
+
+      {
+        path: 'meeting',
+        name: '我的三会一课',
+        component: () => import('@/views/houses/index'),
+        meta: { title: '我的三会一课', icon: 'meeting' }
       }
     ]
   },

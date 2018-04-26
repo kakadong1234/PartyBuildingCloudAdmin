@@ -1,32 +1,27 @@
 <template>
   <div class="app-container">
     <el-form ref="form" :model="form" :rules="createRules" label-width="120px">
-      <el-form-item label="党支部名称" prop="title">
+      <el-form-item label="标题" prop="title">
         <el-input v-model="form.title" :disabled="!isEdit"></el-input>
       </el-form-item>
-      <el-form-item label="党支部类型" prop="type">
-        <el-select v-model="form.type" placeholder="请选择党支部类型" :disabled="!isEdit">
-          <el-option label="党建示范点" value="01"></el-option>
-          <el-option label="普通党支部" value="02"></el-option>
-        </el-select>  
+      <el-form-item label="作者" prop="author">
+        <el-input v-model="form.author" :disabled=true></el-input>
       </el-form-item>
-      <el-form-item label="地址" prop="address">
-        <el-col :span="11">
-          <el-input v-model="form.address" :disabled="!isEdit"></el-input>
-        </el-col>
-        <el-col v-if="isEdit" :span="2">
-          <el-button type="primary" @click="getLocationByAddress()">生成经纬度</el-button>
-        </el-col>
+      <el-form-item label="审核状态:" prop="reviewStatus">
+        <el-switch v-model="!form.reviewStatus" active-text="完成审核" inactive-text="正在审核" :disabled=true></el-switch>
       </el-form-item>
-      <el-form-item label="经纬度" prop="location">
-        <el-input v-model="form.location" :disabled=true></el-input>
+      <el-form-item label="是否公布:" prop="isPublicTxt">
+        <el-switch v-model="form.isPublic" active-text="已公布" inactive-text="未公布" :disabled=true></el-switch>
       </el-form-item>
-      <el-form-item label="党支部详情介绍" prop="des">
+      <el-form-item label="是否优秀:" prop="isGoodTxt">
+        <el-switch v-model="form.isGood" active-text="优秀" inactive-text="普通" :disabled="!isEdit"></el-switch>
+      </el-form-item>
+      <el-form-item label="新闻详情介绍" prop="des">
         <!-- <el-input type="textarea" v-model="form.des"></el-input> -->
         <div id="editor"></div>
       </el-form-item>
       <el-form-item v-if="isEdit" >
-        <el-button @click="openBranchDesPage">党支部详情页面</el-button>
+        <el-button @click="openNewsDesPage">新闻详情页面</el-button>
         <el-button type="primary" @click="onSubmit">编辑</el-button>
         <el-button @click="onCancel">取消</el-button>
       </el-form-item>
@@ -38,9 +33,8 @@
 </template>
 
 <script>
-import { isValidTitle,} from '@/utils/validate'
-import { getPartyBranch, editPartyBranch } from '@/api/partyBranch'
-import { getLocation } from '@/api/map'
+import { isValidTitle} from '@/utils/validate'
+import { getNews, editNews} from '@/api/news'
 import WangEditor from 'wangeditor'
 // import '@/utils/custom-menu'
 
@@ -49,39 +43,14 @@ export default {
     const validateTitle = (rule, value, callback) => {
       console.log('-----------------123')
       if (!isValidTitle(value)) {
-        callback(new Error('请输入正确的党支部名称'))
+        callback(new Error('请输入正确的新闻标题'))
       } else {
         callback()
       }
     }
-
-    const validateType = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error('请选择正确的党支部类型'))
-      } else {
-        callback()
-      }
-    }
-
-    const validateAddress = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error('请输入正确的地址'))
-      } else {
-        callback()
-      }
-    }
-
-    const validateLocation = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error('请先点击生成经纬度按钮,获取经纬度'))
-      } else {
-        callback()
-      }
-    }
-    
     const validateDes = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入正确的党支部详情'))
+        callback(new Error('请输入正确的新闻详情'))
       } else {
         callback()
       }
@@ -93,16 +62,14 @@ export default {
       form: {
         ID: this.$route.path.split('/')[3],
         title: '',
-        type: '',
-        address: '',
-        location: null,
+        author: '',
+        isPublic: '',
+        reviewStatus: '',
+        isGood: '',
         des: '',
       },
       createRules: {
         title: [{ required: true, trigger: 'blur', validator: validateTitle }],
-        type: [{required: true, trigger: 'blur', validator: validateType }],
-        address: [{required: true, trigger: 'blur', validator: validateAddress }],
-        location: [{ required: true, trigger: 'blur', validator: validateLocation }],
         des: [{required: true, trigger: 'blur', validator: validateDes }],
       }
     }
@@ -111,7 +78,7 @@ export default {
   mounted() {
     console.log('mounted')
     console.log(this.isEdit)
-    this.getPartyBranchData(this.form.ID)
+    this.getNewsData(this.form.ID)
     this.initEditor()
   },
 
@@ -186,20 +153,20 @@ export default {
       }
     }
 },
-    getPartyBranchData(ID) {
-      getPartyBranch(ID).then(response => {
-        console.log('get partyBranch success')
+    getNewsData(ID) {
+      getNews(ID).then(response => {
+        console.log('get news success')
         console.log(response)
+        response.data.reviewStatus = response.data.review.status === 0
         this.form = response.data
-        this.form.location = response.data.location + ''
         this.editor.txt.html(this.form.des) 
       })
     },
 
-    editPartyBranchata(branch) {
-      editPartyBranch(branch).then(response => {
+    editNewsData(news) {
+      editNews(news).then(response => {
         console.log('edit success')
-        this.$router.push({ path: '/branch/index' })
+        this.$router.push({ path: '/news/index' })
       })
     },
 
@@ -209,7 +176,7 @@ export default {
         if (valid) {
           console.log('--------')
           console.log(this.form)
-          this.editPartyBranchata(this.form)
+          this.editNewsData(this.form)
         } else {
           console.log('error submit!!')
           return false
@@ -218,21 +185,11 @@ export default {
     },
 
     onCancel() {
-      this.$router.push({ path: '/branch/index' })
+      this.$router.push({ path: '/news/index' })
     },
 
-    openBranchDesPage() {
-      window.open(window.location.origin + '#/branch/des')
-    },
-
-    getLocationByAddress(){
-      console.log('getLocationByAddress')
-      const address = this.form.address;
-      console.log(address)
-      getLocation(address).then(location => {
-        console.log(location)
-        this.form.location = location + ''
-      })
+    openNewsDesPage() {
+      window.open(window.location.origin + '#/news/des')
     }
   }
 }
