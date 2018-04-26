@@ -43,23 +43,23 @@ export const constantRouterMap = [
     }]
   },
   {
-    path: '/partymember',
+    path: '/member',
     component: Layout,
-    redirect: '/partymember/index',
+    redirect: '/member/index',
     name: '党员',
     meta: { title: '党员', icon: 'partymember' },
     children: [
       {
         path: 'index',
         name: '党员管理',
-        component: () => import('@/views/houses/index'),
+        component: () => import('@/views/member/index'),
         meta: { title: '党员管理', icon: 'partymember' }
       },
       {
         path: 'detail/:id',
         name: '详情',
         hidden: true,
-        component: () => import('@/views/houses/detailHouse') //有分析图
+        component: () => import('@/views/member/detailMember') //有分析图
       },
     ]
   },
