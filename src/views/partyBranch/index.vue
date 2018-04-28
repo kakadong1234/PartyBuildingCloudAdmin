@@ -11,9 +11,10 @@
   </div>
   <el-table v-if="tableData.length" class='party_branch_table' :data='tableData' stripe border @selection-change="handleSelectionChange" highlight-current-row @current-change="handleCurrentChange">
         <!-- <el-table-column prop='ID' label='ID' width='100'></el-table-column> -->
-        <el-table-column prop='title' label='名称' width='180'></el-table-column>
+        <el-table-column prop='name' label='名称' width='180'></el-table-column>
         <el-table-column prop='address' label='地址'></el-table-column>
-        <el-table-column prop='location' label='经纬度' width='60'></el-table-column>
+        <el-table-column prop='longitude' label='经度' width='60'></el-table-column>
+        <el-table-column prop='latitude' label='纬度' width='60'></el-table-column>
         <el-table-column prop='qrcodeUrl' label='二维码图片' width='60'>
             <template slot-scope='scope'>
                 <img :src="scope.row.qrcodeUrl" height="40">
@@ -60,20 +61,20 @@ export default {
   methods: {
     fetchData() {
       getPartyBranchList().then(response => {
-        this.tableData = response.data.lists
-        this.allBranchData = response.data.lists
+        this.tableData = response.data
+        this.allBranchData = response.data
       })
     },
 
-    deleteData(ID) {
-      deletePartyBranch(ID)
+    deleteData(id) {
+      deletePartyBranch(id)
     },
 
     handleCurrentChange(val) {
       console.log(val)
       this.currentRow = val
       // TODO跳转 router
-      this.$router.push({ path: '/branch/detail/' + this.currentRow.ID })
+      this.$router.push({ path: '/branch/detail/' + this.currentRow.id })
     },
     isShowDeleteDialog(index, row, column, data) {
       console.log('isShowDeleteDialog')
@@ -87,8 +88,8 @@ export default {
       }
       else {
         this.tableData = this.allBranchData.filter(branch => {
-            console.log(branch.title)
-            return branch.title.indexOf(this.searchValue) !== -1
+            console.log(branch.name)
+            return branch.name.indexOf(this.searchValue) !== -1
         })
       }
     },
@@ -103,15 +104,15 @@ export default {
     },
     editRow(index, row, column, data) {
       console.log('edit')
-      this.$router.push({ path: '/branch/edit/' +  row.ID})
+      this.$router.push({ path: '/branch/edit/' +  row.id})
     },
     detailRow(index, row, column, data) {
       console.log('detail')
-      this.$router.push({ path: '/branch/detail/' +  row.ID})
+      this.$router.push({ path: '/branch/detail/' +  row.id})
     },
     deleteRow() {
       console.log('delete')
-      this.deleteData(this.currentRow.ID)
+      this.deleteData(this.currentRow.id)
       this.dialogVisible = false
       this.fetchData()
     }

@@ -34,8 +34,8 @@ const user = {
           setToken(data.token)
           commit('SET_TOKEN', data.token)
           commit('SET_ROLES', 'admin')
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', 'http://pic.ibaotu.com/00/20/81/58g888piCV68.jpg-0.jpg!ww700')
+          commit('SET_NAME', data.name === undefined ? 'xiaowei' : data.name )
+          commit('SET_AVATAR', data.avatar === undefined ? 'http://pic.ibaotu.com/00/20/81/58g888piCV68.jpg-0.jpg!ww700' : data.avatar)
           resolve()
         }).catch(error => {
           reject(error)

@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form ref="form" :model="form" :rules="createRules" label-width="120px">
-      <el-form-item label="党支部名称" prop="title">
-        <el-input v-model="form.title" :disabled="!isEdit"></el-input>
+      <el-form-item label="党支部名称" prop="name">
+        <el-input v-model="form.name" :disabled="!isEdit"></el-input>
       </el-form-item>
       <el-form-item label="党支部类型" prop="type">
         <el-select v-model="form.type" placeholder="请选择党支部类型" :disabled="!isEdit">
@@ -18,10 +18,13 @@
           <el-button type="primary" @click="getLocationByAddress()">生成经纬度</el-button>
         </el-col>
       </el-form-item>
-      <el-form-item label="经纬度" prop="location">
-        <el-input v-model="form.location" :disabled=true></el-input>
+      <el-form-item label="经度" prop="longitude">
+        <el-input v-model="form.longitude" :disabled=true></el-input>
       </el-form-item>
-      <el-form-item label="党支部详情介绍" prop="des">
+       <el-form-item label="纬度" prop="latitude">
+        <el-input v-model="form.latitude" :disabled=true></el-input>
+      </el-form-item>
+      <el-form-item label="党支部详情介绍" prop="details">
         <!-- <el-input type="textarea" v-model="form.des"></el-input> -->
         <div id="editor"></div>
       </el-form-item>
@@ -91,19 +94,21 @@ export default {
       isEdit: this.$route.path.split('/')[2] === 'edit' ? true : false,
       editor:null,
       form: {
-        ID: this.$route.path.split('/')[3],
-        title: '',
+        id: this.$route.path.split('/')[3],
+        name: '',
         type: '',
         address: '',
-        location: null,
-        des: '',
+        longitude: '', 
+        latitude: '', 
+        details: '',
       },
       createRules: {
-        title: [{ required: true, trigger: 'blur', validator: validateTitle }],
+        name: [{ required: true, trigger: 'blur', validator: validateTitle }],
         type: [{required: true, trigger: 'blur', validator: validateType }],
         address: [{required: true, trigger: 'blur', validator: validateAddress }],
-        location: [{ required: true, trigger: 'blur', validator: validateLocation }],
-        des: [{required: true, trigger: 'blur', validator: validateDes }],
+        longitude: [{ required: true, trigger: 'blur', validator: validateLocation }],
+        latitude: [{ required: true, trigger: 'blur', validator: validateLocation }],
+        details: [{required: true, trigger: 'blur', validator: validateDes }],
       }
     }
   },
@@ -111,7 +116,7 @@ export default {
   mounted() {
     console.log('mounted')
     console.log(this.isEdit)
-    this.getPartyBranchData(this.form.ID)
+    this.getPartyBranchData(this.form.id)
     this.initEditor()
   },
 
@@ -186,13 +191,13 @@ export default {
       }
     }
 },
-    getPartyBranchData(ID) {
-      getPartyBranch(ID).then(response => {
+    getPartyBranchData(id) {
+      getPartyBranch(id).then(response => {
         console.log('get partyBranch success')
         console.log(response)
         this.form = response.data
-        this.form.location = response.data.location + ''
-        this.editor.txt.html(this.form.des) 
+        this.form.type = this.form.flag ? "01" : "02"
+        this.editor.txt.html(this.form.details) 
       })
     },
 
@@ -204,10 +209,11 @@ export default {
     },
 
     onSubmit() {
-      this.form.des = this.editor.txt.html()
+      this.form.details = this.editor.txt.html()
       this.$refs.form.validate(valid => {
         if (valid) {
-          console.log('--------')
+          console.log('--------1231231232323')
+          this.form.flag = this.form.type === "01" ? true : false
           console.log(this.form)
           this.editPartyBranchata(this.form)
         } else {
@@ -231,7 +237,8 @@ export default {
       console.log(address)
       getLocation(address).then(location => {
         console.log(location)
-        this.form.location = location + ''
+        this.form.longitude = location.longitude + ''
+        this.form.latitude = location.latitude + ''
       })
     }
   }

@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form ref="form" :model="form" :rules="createRules" label-width="120px">
-      <el-form-item label="党支部名称" prop="title">
-        <el-input v-model="form.title"></el-input>
+      <el-form-item label="党支部名称" prop="name">
+        <el-input v-model="form.name"></el-input>
       </el-form-item>
       <el-form-item label="党支部类型" prop="type">
         <el-select v-model="form.type" placeholder="请选择党支部类型">
@@ -18,10 +18,13 @@
           <el-button type="primary" @click="getLocationByAddress()">生成经纬度</el-button>
         </el-col>
       </el-form-item>
-      <el-form-item label="经纬度" prop="location">
-        <el-input v-model="form.location" :disabled=true></el-input>
+      <el-form-item label="经度" prop="longitude">
+        <el-input v-model="form.longitude" :disabled=true></el-input>
       </el-form-item>
-      <el-form-item label="党支部详情介绍" prop="des">
+      <el-form-item label="纬度" prop="latitude"> 
+        <el-input v-model="form.latitude" :disabled=true></el-input>
+      </el-form-item>
+      <el-form-item label="党支部详情介绍" prop="details">
         <!-- <el-input type="textarea" v-model="form.des"></el-input> -->
         <div id="editor"></div>
       </el-form-item>
@@ -87,18 +90,20 @@ export default {
     return {
       editor:null,
       form: {
-        title: '',
+        name: '',
         type: '',
         address: '',
-        location: null,
-        des: '',
+        longitude: '', 
+        latitude: '', 
+        details: '',
       },
       createRules: {
-        title: [{ required: true, trigger: 'blur', validator: validateTitle }],
+        name: [{ required: true, trigger: 'blur', validator: validateTitle }],
         type: [{required: true, trigger: 'blur', validator: validateType }],
         address: [{required: true, trigger: 'blur', validator: validateAddress }],
-        location: [{ required: true, trigger: 'blur', validator: validateLocation }],
-        des: [{required: true, trigger: 'blur', validator: validateDes }],
+        longitude: [{ required: true, trigger: 'blur', validator: validateLocation }],
+        latitude: [{ required: true, trigger: 'blur', validator: validateLocation }],
+        details: [{required: true, trigger: 'blur', validator: validateDes }],
       }
     }
   },
@@ -181,9 +186,10 @@ export default {
     },
 
     onSubmit() {
-      this.form.des = this.editor.txt.html()
+      this.form.details = this.editor.txt.html()
       this.$refs.form.validate(valid => {
         if (valid) {
+          this.form.flag = this.form.type === "01" ? true : false
           console.log(this.form)
           this.createPartyBranchData(this.form)
         } else {
@@ -207,7 +213,8 @@ export default {
       console.log(address)
       getLocation(address).then(location => {
         console.log(location)
-        this.form.location = location + ''
+        this.form.longitude = location.longitude + ''
+        this.form.latitude = location.latitude + ''
       })
     }
   }
