@@ -159,47 +159,32 @@ export default {
         console.log(e.target)
         const type = e.target.type
         const data = e.target.data
-        // const title= '<span style="font-size:11px;color:#F00;">价格:318</span>',
+        // content.push("<a href='" + window.location.origin + '#/branch/des'  + "' target='_blank'>详细信息</a>");
         const content=[];
-        content.push("<img src='http://tpc.googlesyndication.com/simgad/5843493769827749134'>地址：北京市朝阳区阜通东大街6号院3号楼 东北 8.3 公里");
-        content.push("电话：010 64733333")
-          // content.push("<a href='" + window.location.origin + '#/branch/des'  + "' target='_blank'>详细信息</a>");
-        content.push("<a href='http://ditu.amap.com/detail/B000A8URXB?citycode=110105' target='_blank'>详细信息</a>");
-        const infoWindow = new AMap.InfoWindow({
-            content: content.join("<br/>")  //使用默认信息窗体框样式，显示信息内容
-        });
-        infoWindow.open(this.map, this.map.getCenter());
-        // if(type === 'branch') {
-        //   const title= '<span style="font-size:11px;color:#F00;">价格:318</span>',
-        //   const content=[];
-        //   content.push("<img src='http://tpc.googlesyndication.com/simgad/5843493769827749134'>地址：北京市朝阳区阜通东大街6号院3号楼 东北 8.3 公里");
-        //   content.push("电话：010 64733333")
-        //   // content.push("<a href='" + window.location.origin + '#/branch/des'  + "' target='_blank'>详细信息</a>");
-        //   content.push("<a href='http://ditu.amap.com/detail/B000A8URXB?citycode=110105' target='_blank'>详细信息</a>");
-        //   content.join("<br>")
-        // }
-        // else {
-        //   const title = ''
-        //   const content = ''
-        // }
-        //   let content=[];
-        //   content.push("<img src='http://tpc.googlesyndication.com/simgad/5843493769827749134'>地址：北京市朝阳区阜通东大街6号院3号楼 东北 8.3 公里 <br>");
-        //   content.push("电话：010 64733333 <br>")
-        //   // content.push("<a href='" + window.location.origin + '#/branch/des'  + "' target='_blank'>详细信息</a>");
-        //   content.push("<a href='http://ditu.amap.com/detail/B000A8URXB?citycode=110105' target='_blank'>详细信息</a> <br>");
-        //   // content.join("<br>")
-        // const location = [data.longitude, data.latitude] 
-        // this.showInfoWindow(location, content)
-        // window.open(window.location.origin + '#/branch/des')
+        if(type === 'branch') {
+          const title = data.name
+          const address = data.address
+          const detailUrl = window.location.origin + '#/branch/des'
+          content.push('<div style="font-size:10px;"> <div>党支部名称:'+ title +'</div> <div>地址：' + address + '</div> <a href="' + detailUrl  + '" target="_blank" style="color:blue">图文详情</a> </div>');
+        }
+        else {
+          const title = data.name
+          const detailPlace = data.detailPlace
+          const date = new Date(data.timestamp)
+          const time = date.getHours() + ':' + date.getMinutes()
+          const detailUrl = window.location.origin + '#/branch/des'
+          content.push('<div style="font-size:10px"> <div>姓名:'+ title +'</div> <div>签到时间:' + time  + '</div> <div>签到地址：' + detailPlace + '</div> <a href="' + detailUrl  + '" target="_blank" style="color:blue">签到详情</a> </div>');
+        }
+        this.showInfoWindow(data, content)
       }
       AMap.event.addListener(marker, 'click', _onClick);
     },
 
     showInfoWindow(location, content){
-      // const infoWindow = new AMap.InfoWindow({
-      //   content
-      // });
-      // infoWindow.open(this.map, [location.longitude, location.latitude]);
+      const infoWindow = new AMap.InfoWindow({
+          content: content.join("<br>"),
+      });
+      infoWindow.open(this.map, [location.longitude, location.latitude]);
     }, 
 
 
@@ -233,7 +218,10 @@ export default {
         const latitude = Math.floor(Math.random()*1000+2000) * 1.0 / 100 
             mockList.push({
               name: '晓伟' + i,
+              detailPlace: '六盘水' + i,
               longitude,
+              userId: i,      
+              timestamp: Date.now(), 
               latitude
             })
       }
