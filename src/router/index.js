@@ -99,11 +99,19 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/signOn/des',
+    name: '签到详情',
+    hidden: true,
+    component: () => import('@/views/member/signOnDes') //有分析图
+  },
+
+  {
     path: '/news/des',
     name: '党建新闻详情页面',
     hidden: true,
     component: () => import('@/views/news/newsDes')
   },
+
 
   {
     path: '/branch',

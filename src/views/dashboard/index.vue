@@ -1,5 +1,5 @@
 <template>
-  <div v-else class="container">
+  <div class="container">
     <div class="check_box_div"> 
       <el-checkbox-group v-model="checkList">
         <el-checkbox v-for="item in mapMarkerTypeList" :key="item.ID" :label="item.title" @change="changeTypeSelect()"></el-checkbox>
@@ -172,7 +172,7 @@ export default {
           const detailPlace = data.detailPlace
           const date = new Date(data.timestamp)
           const time = date.getHours() + ':' + date.getMinutes()
-          const detailUrl = window.location.origin + '#/branch/des'
+          const detailUrl = window.location.origin + '#/signOn/des'
           content.push('<div style="font-size:10px"> <div>姓名:'+ title +'</div> <div>签到时间:' + time  + '</div> <div>签到地址：' + detailPlace + '</div> <a href="' + detailUrl  + '" target="_blank" style="color:blue">签到详情</a> </div>');
         }
         this.showInfoWindow(data, content)
@@ -222,7 +222,11 @@ export default {
               longitude,
               userId: i,      
               timestamp: Date.now(), 
-              latitude
+              latitude,
+              imageList: [
+                'http://d.lanrentuku.com/down/png/1712/14meiweishiwu/14meiweishiwu_09.png',
+                'http://d.lanrentuku.com/down/png/1712/14meiweishiwu/14meiweishiwu_09.png'
+              ]
             })
       }
       return mockList
