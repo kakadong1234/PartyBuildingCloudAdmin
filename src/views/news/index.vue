@@ -11,11 +11,12 @@
   </div>
   <el-table v-if="tableData.length" class='table' :data='tableData' stripe border @selection-change="handleSelectionChange" highlight-current-row @current-change="handleCurrentChange">
         <!-- <el-table-column prop='ID' label='ID' width='100'></el-table-column> -->
-        <el-table-column prop='title' label='标题' width='180'></el-table-column>
-        <el-table-column prop='author' label='作者'></el-table-column>
-        <el-table-column prop='isPublicTxt' label='是否公布' width='60'></el-table-column>
-        <el-table-column prop='reviewStatusTxt' label='审核状态' width='60'></el-table-column>
-        <el-table-column prop ='isGoodTxt' label='是否优秀' width='220'></el-table-column>
+        <el-table-column prop='title' label='标题'></el-table-column>
+        <el-table-column prop='author' label='作者' width='80'></el-table-column>
+        <el-table-column prop='isPublicTxt' label='是否公布' width='80'></el-table-column>
+        <el-table-column prop='reviewStatusTxt' label='审核状态' width='80'></el-table-column>
+        <el-table-column prop ='isGoodTxt' label='是否优秀' width='80'></el-table-column>
+        <el-table-column prop ='time' label='创建时间' width='120'></el-table-column>
         <el-table-column fixed='right' label='操作' width='220'>
           <template slot-scope='scope'>
             <el-button @click.stop='detailRow(scope.$index, scope.row, scope.column, tableData)' type='primary' size='mini'>详情</el-button>
@@ -24,7 +25,7 @@
           </template>
         </el-table-column>
     </el-table>
-    <div class='no_data_div' v-else >无党建新闻数据!</div>
+    <div class='no_data_div' v-if="!listLoading && tableData.length ===0" >无党建新闻数据!请添加数据.</div>
     <el-dialog title="删除提示" :visible.sync="dialogVisible" width="30%" center>
       <span>是否删除该数据?</span>
       <span slot="footer" class="dialog-footer">
@@ -43,6 +44,7 @@ export default {
   data() {
     return {
       searchValue: '',
+      listLoading: true,
       tableData: [],
       allNewsData: [],
       multipleSelection: [],
@@ -56,27 +58,30 @@ export default {
   },
   methods: {
     fetchData() {
+      this.listLoading = true
       getNewsList().then(response => {
-        const list = response.data.lists.map(function(news) {
-          news.isPublicTxt = news.isPublic ? '已公布' : '未公布'
-          news.isGoodTxt = news.isGood? '优秀' : '普通'
-          news.reviewStatusTxt = news.review.status === 0 ? '正在审核' : '完成审核'
+        const list = response.data.map(function(news) {
+          news.isPublicTxt = '已公布'
+          news.isGoodTxt = '普通'
+          news.reviewStatusTxt = '完成审核'
+          news.author = 'xiaowei'
           return news
         })
         this.tableData = list
         this.allNewsData = list
+        this.listLoading = false
       })
     },
 
     deleteData(ID) {
-      deleteNews(ID)
+      return deleteNews(ID)
     },
 
     handleCurrentChange(val) {
       console.log(val)
       this.currentRow = val
       // TODO跳转 router
-      this.$router.push({ path: '/news/detail/' + this.currentRow.ID })
+      this.$router.push({ path: '/news/detail/' + this.currentRow.id })
     },
     isShowDeleteDialog(index, row, column, data) {
       console.log('isShowDeleteDialog')
@@ -106,17 +111,18 @@ export default {
     },
     editRow(index, row, column, data) {
       console.log('edit')
-      this.$router.push({ path: '/news/edit/' +  row.ID})
+      this.$router.push({ path: '/news/edit/' +  row.id})
     },
     detailRow(index, row, column, data) {
       console.log('detail')
-      this.$router.push({ path: '/news/detail/' +  row.ID})
+      this.$router.push({ path: '/news/detail/' +  row.id})
     },
     deleteRow() {
       console.log('delete')
-      this.deleteData(this.currentRow.ID)
-      this.dialogVisible = false
-      this.fetchData()
+      this.deleteData(this.currentRow.id).then(()=> {
+        this.dialogVisible = false
+        this.fetchData()
+      })
     }
   }
 }

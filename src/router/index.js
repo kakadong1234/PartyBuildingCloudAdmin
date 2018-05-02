@@ -106,7 +106,7 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/news/des',
+    path: '/news/des/:id',
     name: '党建新闻详情页面',
     hidden: true,
     component: () => import('@/views/news/newsDes')
@@ -148,7 +148,7 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/branch/des',
+    path: '/branch/des/:id',
     name: '党支部',
     hidden: true,
     component: () => import('@/views/partyBranch/branchDes')

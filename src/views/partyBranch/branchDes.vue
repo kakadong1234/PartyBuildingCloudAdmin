@@ -13,8 +13,7 @@ import { getPartyBranch } from '@/api/partyBranch'
 export default {
   data() {
     return {
-      // id: this.$route.params.id,
-      id: 1,
+      id: this.$route.params.id,
       branch: {},
     }
   },

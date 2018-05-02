@@ -4,7 +4,7 @@
       <el-form-item label="标题" prop="title">
         <el-input v-model="form.title"></el-input>
       </el-form-item>
-      <el-form-item label="党建新闻详情介绍" prop="des">
+      <el-form-item label="党建新闻详情介绍" prop="content">
         <!-- <el-input type="textarea" v-model="form.des"></el-input> -->
         <div id="editor"></div>
       </el-form-item>
@@ -28,7 +28,7 @@ export default {
     const validateTitle = (rule, value, callback) => {
       console.log('-----------------123')
       if (!isValidTitle(value)) {
-        callback(new Error('请输入正确的党支部名称'))
+        callback(new Error('请输入正确的标题'))
       } else {
         callback()
       }
@@ -36,7 +36,7 @@ export default {
 
     const validateDes = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入正确的党支部详情'))
+        callback(new Error('请输入正确的详情'))
       } else {
         callback()
       }
@@ -46,11 +46,11 @@ export default {
       editor:null,
       form: {
         title: '',
-        des: '',
+        content: '',
       },
       createRules: {
         title: [{ required: true, trigger: 'blur', validator: validateTitle }],
-        des: [{required: true, trigger: 'blur', validator: validateDes }],
+        content: [{required: true, trigger: 'blur', validator: validateDes }],
       }
     }
   },
@@ -133,7 +133,7 @@ export default {
     },
 
     onSubmit() {
-      this.form.des = this.editor.txt.html()
+      this.form.content = this.editor.txt.html()
       this.$refs.form.validate(valid => {
         if (valid) {
           console.log(this.form)

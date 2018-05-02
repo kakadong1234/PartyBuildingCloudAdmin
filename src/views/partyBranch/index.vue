@@ -9,7 +9,8 @@
       </form>
     </div>
   </div>
-  <el-table v-if="tableData.length" class='party_branch_table' :data='tableData' stripe border @selection-change="handleSelectionChange" highlight-current-row @current-change="handleCurrentChange">
+  <el-table v-if="tableData.length" class='party_branch_table' :data='tableData' 
+  stripe border @selection-change="handleSelectionChange" highlight-current-row @current-change="handleCurrentChange">
         <!-- <el-table-column prop='ID' label='ID' width='100'></el-table-column> -->
         <el-table-column prop='name' label='名称' width='180'></el-table-column>
         <el-table-column prop='address' label='地址'></el-table-column>
@@ -28,7 +29,7 @@
           </template>
         </el-table-column>
     </el-table>
-    <div class='no_data_div' v-else >无党支部数据!</div>
+    <div class='no_data_div' v-if="!listLoading && tableData.length ===0">无党支部数据!请添加数据.</div>
     <el-dialog title="删除提示" :visible.sync="dialogVisible" width="30%" center>
       <span>是否删除该数据?</span>
       <span slot="footer" class="dialog-footer">
@@ -47,6 +48,7 @@ export default {
   data() {
     return {
       searchValue: '',
+      listLoading: true,
       tableData: [],
       allBranchData: [],
       multipleSelection: [],
@@ -60,10 +62,12 @@ export default {
   },
   methods: {
     fetchData() {
+      this.listLoading = true
       getPartyBranchList().then(response => {
         console.log('eeqweqwewqe-------')
         this.tableData = response.data
         this.allBranchData = response.data
+        this.listLoading = false
       })
     },
 

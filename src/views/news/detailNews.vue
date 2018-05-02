@@ -8,7 +8,7 @@
         <el-input v-model="form.author" :disabled=true></el-input>
       </el-form-item>
       <el-form-item label="审核状态:" prop="reviewStatus">
-        <el-switch v-model="!form.reviewStatus" active-text="完成审核" inactive-text="正在审核" :disabled=true></el-switch>
+        <el-switch v-model="form.reviewStatus" active-text="完成审核" inactive-text="正在审核" :disabled=true></el-switch>
       </el-form-item>
       <el-form-item label="是否公布:" prop="isPublicTxt">
         <el-switch v-model="form.isPublic" active-text="已公布" inactive-text="未公布" :disabled=true></el-switch>
@@ -16,7 +16,10 @@
       <el-form-item label="是否优秀:" prop="isGoodTxt">
         <el-switch v-model="form.isGood" active-text="优秀" inactive-text="普通" :disabled="!isEdit"></el-switch>
       </el-form-item>
-      <el-form-item label="新闻详情介绍" prop="des">
+      <el-form-item label="创建时间" prop="time">
+        <el-input v-model="form.time" :disabled=true></el-input>
+      </el-form-item>
+      <el-form-item label="新闻详情介绍" prop="content">
         <!-- <el-input type="textarea" v-model="form.des"></el-input> -->
         <div id="editor"></div>
       </el-form-item>
@@ -60,17 +63,18 @@ export default {
       isEdit: this.$route.path.split('/')[2] === 'edit' ? true : false,
       editor:null,
       form: {
-        ID: this.$route.path.split('/')[3],
+        id: this.$route.path.split('/')[3],
         title: '',
         author: '',
         isPublic: '',
         reviewStatus: '',
         isGood: '',
-        des: '',
+        content: '',
+        time: ''
       },
       createRules: {
         title: [{ required: true, trigger: 'blur', validator: validateTitle }],
-        des: [{required: true, trigger: 'blur', validator: validateDes }],
+        content: [{required: true, trigger: 'blur', validator: validateDes }],
       }
     }
   },
@@ -78,7 +82,7 @@ export default {
   mounted() {
     console.log('mounted')
     console.log(this.isEdit)
-    this.getNewsData(this.form.ID)
+    this.getNewsData(this.form.id)
     this.initEditor()
   },
 
@@ -153,13 +157,16 @@ export default {
       }
     }
 },
-    getNewsData(ID) {
-      getNews(ID).then(response => {
+    getNewsData(id) {
+      getNews(id).then(response => {
         console.log('get news success')
         console.log(response)
-        response.data.reviewStatus = response.data.review.status === 0
+        response.data.author = 'xiaowei'
+        response.data.isPublic = true
+        response.data.isGood = false
+        response.data.reviewStatus = true
         this.form = response.data
-        this.editor.txt.html(this.form.des) 
+        this.editor.txt.html(this.form.content) 
       })
     },
 
@@ -171,9 +178,11 @@ export default {
     },
 
     onSubmit() {
-      this.form.des = this.editor.txt.html()
+      this.form.content = this.editor.txt.html()
       this.$refs.form.validate(valid => {
         if (valid) {
+          this.form.audit = ''
+          this.form.quality = ''
           console.log('--------')
           console.log(this.form)
           this.editNewsData(this.form)
@@ -189,7 +198,7 @@ export default {
     },
 
     openNewsDesPage() {
-      window.open(window.location.origin + '#/news/des')
+      window.open(window.location.origin + '#/news/des/' + this.form.id)
     }
   }
 }

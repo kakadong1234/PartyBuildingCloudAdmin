@@ -9,13 +9,13 @@
     <div class="notice_container">
       <div class="right_div"> 
         <div class='list_title_div'> 他山之玉 </div>
-        <div v-for="(item, index) in goodNewsList" :key="item.ID" class="item_div" @click="goToDetailPage(item.ID)">
+        <div v-for="(item, index) in goodNewsList" :key="item.id" class="item_div" @click="goToDetailPage(item.id)">
           {{index+1}}. {{item.title}}
         </div> 
       </div> 
       <div class="right_div">
         <div class='list_title_div'> 新闻动态 </div>
-        <div v-for="(item, index) in newsList" :key="item.ID" class="item_div" @click="goToDetailPage(item.ID)">
+        <div v-for="(item, index) in newsList" :key="item.id" class="item_div" @click="goToDetailPage(item.id)">
           {{index+1}}. {{item.title}}
         </div>  
        </div> 
@@ -34,7 +34,7 @@ import { mapGetters } from 'vuex'
 import { getLocation } from '@/api/map'
 import { getPartyBranchList } from '@/api/partyBranch'
 import { getSignOnList } from '@/api/member'
-
+import { getNewsList } from '@/api/news'
 
 export default {
    data() {
@@ -73,27 +73,9 @@ export default {
       //党员列表
       partyMemberList: [],
       //他山之玉
-      goodNewsList: [
-        {
-          title: 'ta1',
-          url: 'http://www.baidu.com?q=ta1'
-        },
-        {
-          title: 'ta2',
-          url: 'http://www.baidu.com?q=ta2'
-        }
-      ],
+      goodNewsList: [],
       //新闻动态
-      newsList: [
-        {
-          title: 'dongtai1',
-          url: 'http://www.baidu.com?q=dongtai1'
-        },
-        {
-          title: 'dongtai2',
-          url: 'http://www.baidu.com?q=dongtai2'
-        }
-      ],
+      newsList: [],
       //考试排行榜
       examScoreList: [
         {
@@ -115,6 +97,9 @@ export default {
   mounted: function () {
     console.log('mounted')
     this.initMap()
+    this.fetchNewsList()
+    this.fetchGoodNewsList()
+    this.fetchExamScoreList()
   },
   computed: {
     ...mapGetters([
@@ -231,20 +216,42 @@ export default {
       }
       return mockList
     },
-    fetchPartyBranchList(){
-      //获取党支部列表
-    },
+    // fetchPartyBranchList(){
+    //   //获取党支部列表
+    // },
 
-    fetchPartyMemberList(){
-      //获取党员签到列表
-    },
+    // fetchPartyMemberList(){
+    //   //获取党员签到列表
+    // },
 
     //他山之玉列表
     fetchGoodNewsList(){
+      getNewsList().then(response => {
+        const list = response.data.map(function(news) {
+          news.isPublicTxt = '已公布'
+          news.isGoodTxt = '普通'
+          news.reviewStatusTxt = '完成审核'
+          news.author = 'xiaowei'
+          return news
+        })
+        this.goodNewsList = list.filter(function(news){
+          return news.id % 2 === 0
+        })
+      })
     },
 
     //新闻动态列表
     fetchNewsList(){
+       getNewsList().then(response => {
+        const list = response.data.map(function(news) {
+          news.isPublicTxt = '已公布'
+          news.isGoodTxt = '普通'
+          news.reviewStatusTxt = '完成审核'
+          news.author = 'xiaowei'
+          return news
+        })
+        this.newsList = list
+      })
     },
 
     //考试排行榜
@@ -253,6 +260,7 @@ export default {
 
     goToDetailPage(ID){
       console.log('detail')
+      window.open(window.location.origin + '#/news/des/' + ID)
     },
 
     changeTypeSelect(){
@@ -306,6 +314,7 @@ export default {
           margin-left:0.1rem;
         }
         .item_div{
+          margin-top:0.05rem;
           margin-left:0.1rem;
           font-size: 0.12rem;
         }

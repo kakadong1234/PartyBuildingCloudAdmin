@@ -229,7 +229,7 @@ export default {
     },
 
     openBranchDesPage() {
-      window.open(window.location.origin + '#/branch/des')
+      window.open(window.location.origin + '#/branch/des/' + this.form.id)
     },
 
     getLocationByAddress(){
