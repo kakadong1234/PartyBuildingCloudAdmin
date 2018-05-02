@@ -4,6 +4,7 @@
     <div class='other_div'>
         <div>姓名: {{name}}</div>
         <div>签到时间: {{time}}</div>
+        <div>签到位置: {{address}}</div>
         <div>描述: {{remark}}</div>
         <div class="imgArr">
             <div  v-for="imgObject in imageList" :key="imgObject.index">
@@ -21,6 +22,7 @@ export default {
     return {
       map: null,
       name: '晓伟',
+      address: '六盘水钟山区',
       time: '2018-05-02 18:20',
       remark: 'helloWorld, 阿道夫撒发的helloWorld, 阿道夫撒发的helloWorld, 阿道夫撒发的helloWorld, 阿道夫撒发的helloWorld, 阿道夫撒发的helloWorld, 阿道夫撒发的helloWorld, 阿道夫撒发的',
       imageList: [
@@ -49,6 +51,7 @@ export default {
           position: mapLocation,//marker所在的位置
           map: this.map//创建时直接赋予map属性
         }
+        const marker = new AMap.Marker(markerData);
     },
   }
 }
