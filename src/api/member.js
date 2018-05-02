@@ -1,4 +1,4 @@
-// import request from '@/utils/request'
+import request from '@/utils/request'
 let MOCK_HOUSES = [
   {
     ID: 1,
@@ -55,6 +55,14 @@ let MOCK_HOUSES = [
     }
   },
 ]
+
+export function getSignOnList() {
+  console.log('getSignOnList request')
+  return request({
+    url: '/listRecord/22123959',
+    method: 'get'
+  })
+}
 
 export function getMemberList() {
   console.log('getMemberList request')
