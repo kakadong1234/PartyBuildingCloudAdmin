@@ -61,13 +61,14 @@ export default {
   methods: {
     fetchData() {
       getPartyBranchList().then(response => {
+        console.log('eeqweqwewqe-------')
         this.tableData = response.data
         this.allBranchData = response.data
       })
     },
 
     deleteData(id) {
-      deletePartyBranch(id)
+      return deletePartyBranch(id)
     },
 
     handleCurrentChange(val) {
@@ -112,9 +113,10 @@ export default {
     },
     deleteRow() {
       console.log('delete')
-      this.deleteData(this.currentRow.id)
-      this.dialogVisible = false
-      this.fetchData()
+      this.deleteData(this.currentRow.id).then(()=> {
+        this.dialogVisible = false
+        this.fetchData()
+      }) 
     }
   }
 }

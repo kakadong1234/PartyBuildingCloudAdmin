@@ -129,21 +129,22 @@ export default {
       editor.customConfig.debug = true
       console.log(editor)
       editor.customConfig.showLinkImg = false
-      editor.customConfig.uploadImgServer = 'http://picture-system-live.ejudata.com/qiniu/image/single'  // 上传图片到服务器
+      //editor.customConfig.uploadImgServer = 'http://picture-system-live.ejudata.com/qiniu/image/single'  // 上传图片到服务器
+      editor.customConfig.uploadImgServer = process.env.BASE_API + '/fileUpload'  // 上传图片到服务器
       // // 图片上传限制
       // editor.customConfig.uploadImgMaxSize = 5 * 1024 * 1024
       // editor.customConfig.uploadImgMaxLength = 1
       // header和 body 配置
       editor.customConfig.uploadFileName = 'file'
-      editor.customConfig.uploadImgParams = {
-        bizType:2
-      },
-      editor.customConfig.uploadImgHeaders = {
-          ts: 1524539752494,
-          token: 'd4c349f09cc2dd8d5b2c2da3347c1497',
-          platform: 'WEB'
-      }
-      editor.customConfig.uploadImgTimeout = 8000
+      // editor.customConfig.uploadImgParams = {
+      //   bizType:2
+      // },
+      // editor.customConfig.uploadImgHeaders = {
+      //     ts: 1524539752494,
+      //     token: 'd4c349f09cc2dd8d5b2c2da3347c1497',
+      //     platform: 'WEB'
+      // }
+      editor.customConfig.uploadImgTimeout = 15000
       editor.customConfig.uploadImgHooks = {
         before: function (xhr, editor, files) {
             console.log('before')
@@ -173,7 +174,7 @@ export default {
         // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
         console.log(result)
         // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
-        const url = result.data.url
+        const url = result.data[0]
         insertImg(url)
       }
     }

@@ -131,7 +131,7 @@ export default {
         // 生成 map
         const mapLocation = [location.longitude, location.latitude]
         this.map = new AMap.Map('map',{
-              zoom: 10,
+              zoom: 9,
               center: mapLocation
         });
         //添加中心点标记
@@ -206,7 +206,7 @@ export default {
           this.partyMemberList = mockList
           this.partyMemberList.map(member => {
               const location = [member.longitude, member.latitude]
-              this.addMarker(location, 'http://7xrsfo.com1.z0.glb.clouddn.com/circle.png', {width: 10, height: 10}, member, 'member')
+              this.addMarker(location, 'http://7xrsfo.com1.z0.glb.clouddn.com/star.png', {width: 15, height: 15}, member, 'member')
           })
       })
     },

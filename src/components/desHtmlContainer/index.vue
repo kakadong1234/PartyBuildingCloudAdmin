@@ -43,5 +43,6 @@ export default {
   .container {
     font-size: 20px;
     margin-left: 0.5rem;
+    margin-right: 0.5rem;
   }
 </style>
