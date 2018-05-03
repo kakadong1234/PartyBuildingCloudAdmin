@@ -149,7 +149,7 @@ export default {
         if(type === 'branch') {
           const title = data.name
           const address = data.address
-          const detailUrl = window.location.origin + '#/branch/des'
+          const detailUrl = window.location.origin + '#/branch/des/' + data.id
           content.push('<div style="font-size:10px;"> <div>党支部名称:'+ title +'</div> <div>地址：' + address + '</div> <a href="' + detailUrl  + '" target="_blank" style="color:blue">图文详情</a> </div>');
         }
         else {
