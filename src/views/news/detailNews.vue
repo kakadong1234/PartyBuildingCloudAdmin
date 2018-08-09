@@ -183,6 +183,7 @@ export default {
         if (valid) {
           this.form.audit = ''
           this.form.quality = ''
+          this.form.subject = ''
           console.log('--------')
           console.log(this.form)
           this.editNewsData(this.form)

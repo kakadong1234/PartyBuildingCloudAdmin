@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 export function login(username, password) {
-  const userId = 'fadfqfadfadsfadfadfadfer3233'
+  const userId = '065506030123353335'
   return request({
     // url: '/user/login',
     url: '/login',

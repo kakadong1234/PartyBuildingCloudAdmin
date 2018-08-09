@@ -1,9 +1,9 @@
 <template>
   <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
-    <sidebar class="sidebar-container"></sidebar>
+    <navbar :routes="routes"></navbar>
     <div class="main-container">
-      <!-- <navbar></navbar> -->
-      <app-main></app-main>
+      <sidebar class="sidebar-container"></sidebar>
+      <app-main class="app-main-container"></app-main>
     </div>
   </div>
 </template>
@@ -21,7 +21,43 @@ export default {
   computed: {
     sidebar() {
       return this.$store.state.app.sidebar
-    }
+    },
+    routes() {
+      return [
+        {
+          id:1,
+          title: "信息动态"
+        },
+        {
+          id:2,
+          title: "网上讲习所"
+        },
+        {
+          id:3,
+          title: "驻村云监管"
+        },
+        {
+          id:4,
+          title: "党建大数据"
+        },
+        {
+          id:5,
+          title: "智能调度台"
+        },
+        {
+          id:6,
+          title: "党旗E家"
+        },
+        {
+          id:7,
+          title: "人才直通车"
+        },
+        {
+          id:8,
+          title: "后台管理"
+        },
+      ]
+    },
   }
 }
 </script>

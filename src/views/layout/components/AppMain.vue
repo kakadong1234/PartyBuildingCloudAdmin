@@ -8,12 +8,15 @@
 </template>
 
 <script>
+
+import {Sidebar} from '@/views/layout/components'
+
 export default {
   name: 'AppMain',
+  components: {
+    Sidebar
+  },
   computed: {
-    // key() {
-    //   return this.$route.name !== undefined ? this.$route.name + +new Date() : this.$route + +new Date()
-    // }
   }
 }
 </script>

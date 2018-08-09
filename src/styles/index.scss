@@ -51,7 +51,16 @@ a:hover {
 
 //main-container全局样式
 .app-main{
-  min-height: 100%
+  min-height: 100%;
+  position: absolute;
+  /*绝对定位*/
+  top: 5px;
+  right: 0;
+  bottom: 70px;
+  left: 210px;
+  border: 1px solid #006;/* 使用边框，区分内容*/    
+  overflow-y: scroll;/*显示y轴滚动条*/
+  overflow-x: hidden;/*隐藏x轴滚动条*/ 
 }
 
 .app-container {

@@ -80,13 +80,13 @@ export default {
       examScoreList: [
         {
           examination: {
-            name: '112'
+            name: '张富裕'
           },
           score: 90
         },
         {
           examination: {
-            name: '113'
+            name: '李青峰'
           },
           score: 82
         }
