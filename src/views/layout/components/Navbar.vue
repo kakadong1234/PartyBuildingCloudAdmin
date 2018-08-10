@@ -136,7 +136,7 @@ export default {
       line-height: 50px;
       text-align: center;
       color: white;
-      font-size: 0.15rem;
+      font-size: 0.18rem;
     };
     };
 
